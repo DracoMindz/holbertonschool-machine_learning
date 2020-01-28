@@ -4,11 +4,12 @@
 
 def matrix_shape(matrix):
     """Finds dimensions of matrix"""
-
-    size = []
-
-    if (len(matrix) > 0):
-        size.append(len(matrix))
-        return (size)
-    else:
+    if len(matrix) == 0:
         return [0]
+    size = [len(matrix)]
+    if type(matrix) is int:
+        return
+    else:
+        size.append(len(matrix[0]))
+        matrix = matrix[0]
+        return size
