@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 
 
+"""transpose a matrix no numpy"""
+
+
 def matrix_transpose(matrix):
     """transpose matrix"""
     m = []
