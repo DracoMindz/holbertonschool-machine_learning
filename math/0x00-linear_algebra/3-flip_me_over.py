@@ -2,7 +2,6 @@
 
 
 def matrix_transpose(matrix):
-
     """transpose matrix"""
     m = []
     for i in range(len(matrix[0])):
