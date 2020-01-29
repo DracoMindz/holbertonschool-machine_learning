@@ -3,5 +3,5 @@
 
 
 def np_shape(matrix):
-    # return shape of numpy.ndarray as tuple
-    return (matrix.shape)
+    """return shape of numpy.ndarray as tuple"""
+    return matrix.shape
