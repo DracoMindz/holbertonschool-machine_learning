@@ -1,7 +1,6 @@
 # 0x02. Calculus
 Specializations - Machine Learning ― Math
 
-![https://i.udemycdn.com/course/750x422/2113900_e5cd_4.jpg]
 
 ## Learning Objectives
 
