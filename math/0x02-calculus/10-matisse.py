@@ -19,5 +19,4 @@ def poly_derivative(poly):
         dePoly.append(c * (p + 1))
     if coIndex == 0:
         return [0]
-
     return dePoly[:coIndex + 1]
