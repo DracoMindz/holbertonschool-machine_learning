@@ -24,7 +24,8 @@ class Poisson:
         if k < 0:
             return 0
         return (pow(self.lambtha, k)
-                * pow(2.7182818285, -1 * self.lambtha) / m_factorial(k) )
+                * pow(2.7182818285, -1 * self.lambtha) / m_factorial(k))
+
 
 def m_factorial(m):
     if m == 1 or m == 0:
