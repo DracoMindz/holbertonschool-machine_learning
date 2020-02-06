@@ -19,15 +19,15 @@ class Poisson:
 
     def pmf(self, k):
         """Calculate value of PMF for k successes"""
-        if type(k) is not int:
-            k = int(k)
         if k < 0:
             return 0
+        k = int(k)
         return (pow(self.lambtha, k)
                 * pow(2.7182818285, -1 * self.lambtha) / m_factorial(k))
 
 
 def m_factorial(m):
+    """factorial of m"""
     if m == 1 or m == 0:
         return 1
     else:
