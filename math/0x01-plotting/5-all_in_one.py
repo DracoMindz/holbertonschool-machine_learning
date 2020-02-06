@@ -82,7 +82,7 @@ plt.title('Project A', fontsize='x-small')
 plt.xlim(0, 100)
 plt.xticks(bin_edges)
 plt.ylim(0, 30)
-plt.yticks(np.arrange(0, 31, step=10))
+plt.yticks(np.arange(0, 31, step=10))
 
 
 fig.tight_layout()
