@@ -24,3 +24,20 @@ class Binomial:
             n = mean / self.p
             self.n = round(n)
             self.p *= n / self.n
+
+    def pmf(self, k):
+        """Calculates value of PMF for given number k"""
+        if type(k) is not int:
+            k = int(k)
+        if k > self.n or k < 0:
+            return 0
+        return (m_factorial(self.n) / m_factorial(k) / m_factorial(self.n - k)
+                * self.p ** k * (1 - self.p) ** (self.n - k))
+
+
+def m_factorial(m):
+    """factorial of m"""
+    if m == 1 or m == 0:
+        return 1
+    else:
+        return m * m_factorial(m-1)
