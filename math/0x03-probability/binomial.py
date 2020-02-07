@@ -34,6 +34,18 @@ class Binomial:
         return (m_factorial(self.n) / m_factorial(k) / m_factorial(self.n - k)
                 * self.p ** k * (1 - self.p) ** (self.n - k))
 
+    def cdf(self, k):
+        """Calculates value CDF for given number k """
+        c_prob = 0
+
+        if type(k) is not int:
+            k = int(k)
+        if k > self.n or k < 0:
+            return 0
+        for m in range(0, k + 1):
+            c_prob += self.pmf(m)
+        return c_prob
+
 
 def m_factorial(m):
     """factorial of m"""
