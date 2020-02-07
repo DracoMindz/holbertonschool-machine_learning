@@ -36,6 +36,7 @@ class Normal:
                 (2 * 3.1415926536 * self.stddev ** 2) ** .5)
 
     def cdf(self, x):
+        """Calculates value of CDF for x-value"""
         m = (x - self.mean) / (self.stddev * 2 ** .5)
         return (1 + (m - m ** 3 / 3 + m ** 5 / 10 - m ** 7
                      / 42 + m ** 9 / 216) * 2 / 3.1415926536 ** .5) / 2
