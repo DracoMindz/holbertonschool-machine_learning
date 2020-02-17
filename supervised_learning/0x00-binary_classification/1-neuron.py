@@ -9,9 +9,9 @@ class Neuron:
     def __init__(self, nx):
         """nx is the number of input features to the neuron"""
         if type(nx) is not int:
-            raise TypeError("nx must be an integer")
+            raise TypeError("nx must be a integer")
         if nx < 1:
-            raise ValueError("nx must be a positiveç")
+            raise ValueError("nx must be a positive")
         self.__W = np.ndarray((1, nx))
         self.__W[0] = np.random.normal(size=nx)
         self.__b = 0
