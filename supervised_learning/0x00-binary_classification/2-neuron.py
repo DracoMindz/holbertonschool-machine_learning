@@ -17,23 +17,23 @@ class Neuron:
         self.__b = 0
         self.__A = 0
 
-        @property
-        def W(self):
-            """return weights"""
-            return self.__W
+    @property
+    def W(self):
+        """return weights"""
+        return self.__W
 
-        @property
-        def b(self):
-            """returns bias"""
-            return self.__b
+    @property
+    def b(self):
+        """returns bias"""
+        return self.__b
 
-        @property
-        def A(self):
-            """return activation output"""
-            return self.__A
+    @property
+    def A(self):
+        """return activation output"""
+        return self.__A
 
-        def forward_prop(self, X):
-            """Updates the private attribute __A"""
-            M = np.matmul(self.__W, X) + self.__b
-            self.__A = 1.0/(1.0 + np.exp(-M))
-            return self.__A
+    def forward_prop(self, X):
+        """Updates the private attribute __A"""
+        M = np.matmul(self.__W, X) + self.__b
+        self.__A = 1.0/(1.0 + np.exp(-M))
+        return self.__A
