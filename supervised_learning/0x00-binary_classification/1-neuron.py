@@ -1,4 +1,5 @@
 #!/usr/bin/env pyhton3
+"""Class defines single neuron performing binary classification"""
 import numpy as np
 
 
@@ -18,12 +19,15 @@ class Neuron:
 
     @property
     def W(self):
+        """return weights"""
         return self.__W
 
     @property
     def b(self):
+        """returns bias"""
         return self.__b
 
     @property
     def A(self):
+        """return activation output"""
         return self.__A
