@@ -52,6 +52,7 @@ class Neuron:
         self.__b = self.__b - alpha * (A - Y).mean()
 
     def train(self, X, Y, iterations=5000, alpha=0.05):
+        """trains the neuron"""
         if type(iterations) is not (int):
             raise TypeError("iterations must be an integer")
         if iterations < 0:
