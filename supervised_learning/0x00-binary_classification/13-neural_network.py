@@ -74,7 +74,7 @@ class NeuralNetwork:
     def gradient_descent(self, X, Y, A1, A2, alpha=0.05):
         """calculates one pass gradient descent on the NN"""
         dpW2 = np.dot(self.__W2.T, (A2 - Y)) * A1 * (1 - A1)
-        self.__W1 = (self.__W1 - alpha * np.dot((A2 - Y), X.T) / X.shape[1])
-        self.__W2 = (self.__W2 - alpha * np.dot(dpW2, A1.T) / A1.shape[1])
-        self.__b1 = self.__b1 - alpha * (A2 - Y).mean(1, keepdims=True)
-        self.__b2 = self.__b2 - alpha * dpW2.mean(1, keepdims=True)
+        self.__W1 = self.__W1 - alpha * np.dot(dpW2, X.T) / X.shape[1]
+        self.__W2 = self.__W2 - alpha * np.dot((A2 - Y), A1.T) / A1.shape[1]
+        self.__b1 = self.__b1 - alpha * (A2 - Y).mean(axis=1, keepdims=True)
+        self.__b2 = self.__b2 - alpha * dpW2.mean(axis=1, keepdims=True)
