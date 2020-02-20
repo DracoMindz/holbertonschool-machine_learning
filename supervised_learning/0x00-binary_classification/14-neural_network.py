@@ -73,11 +73,12 @@ class NeuralNetwork:
 
     def gradient_descent(self, X, Y, A1, A2, alpha=0.05):
         """calculates one pass gradient descent on the NN"""
-        dpW2 = np.dot(self.__W2.T, (A2 - Y)) * A1 * (1 - A1)
-        self.__W1 = self.__W1 - alpha * np.dot(dpW2, X.T) / X.shape[1]
-        self.__W2 = self.__W2 - alpha * np.dot((A2 - Y), A1.T) / A1.shape[1]
-        self.__b1 = self.__b1 - alpha * (A2 - Y).mean(axis=1, keepdims=True)
-        self.__b2 = self.__b2 - alpha * dpW2.mean(axis=1, keepdims=True)
+        dz2 = A2 - Y
+        dz1 = np.matmul(self.__W2.T, dz2) * A1 * (1 - A1)
+        self.__W1 = self.__W1 - alpha * np.matmul(dz1, X.T) / X.shape[1]
+        self.__W2 = self.__W2 - alpha * np.matmul(dz2, A1.T) / A1.shape[1]
+        self.__b1 = self.__b1 - alpha * dz1.mean(axis=1, keepdims=True)
+        self.__b2 = self.__b2 - alpha * dz2.mean(axis=1, keepdims=True)
 
     def train(self, X, Y, iterations=5000, alpha=0.05):
         """trains the neural network"""
@@ -90,6 +91,6 @@ class NeuralNetwork:
         if alpha <= 0:
             raise ValueError("alpha must be positive")
         for i in range(iterations):
-            self.forward_prop(X)
-            self.gradient_descent(X, Y, self.__A1, self.__A2, alpha)
+            self.gradient_descent(X, Y, *self.forward_prop(X), alpha)
+            i -= 1
         return self.evaluate(X, Y)
