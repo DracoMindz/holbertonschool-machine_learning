@@ -6,6 +6,7 @@ import numpy as np
 
 class DeepNeuralNetwork:
     """Deep Neural Network Class"""
+    
     def __init__(self, nx, layers):
         """nx is number of input values"""
         if type(nx) is not (int):
@@ -13,11 +14,11 @@ class DeepNeuralNetwork:
         if nx < 1:
             raise ValueError("nx must be a positive integer")
         """layers list reping num nodes in each layer"""
-        if type(layers) is not (list):
+        if type(layers) is not (list) or len(layers) < 1:
             raise TypeError("layers must be a list of positive integers")
         for i_layer in layers:
             """ i_layer reps elements in layers"""
-            if type(i_layer) is not (int):
+            if type(i_layer) is not (int) or i_layer < 1:
                 raise TypeError("layers must be a list of positive integers")
         self.L = len(layers)
         self.cache = {}
