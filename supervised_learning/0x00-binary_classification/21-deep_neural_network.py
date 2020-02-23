@@ -94,19 +94,19 @@ class DeepNeuralNetwork:
         """Calculates one pass gradient descent on NN"""
 
         m = Y.shape[1]
-        dz = {self.__cache["A" + str(elf.__L)] - Y}
+        dz = {}
         for idx_l in reversed(range(self.__L)):
+            dz = {self.__L: self.__cache["A" + str(self.__L)] - Y}
             strWL = "W" + str(self.__L)
             strA = "A" + str(idx_l)
             strW = "W" + str(idx_l)
             strb = "b" + str(idx_l)
-            dz_l = dz[idx_l]
-            if idx_1 == self.__L - 1:
-                dz_l = (np.matmul(self.__weights[strWL].T, dz[idx_l + 1])
-                        * self.__cache[strA] * (1 - self.__cache[strA])
+            if idx_l == self.__L - 1:
+                dz[idx_l] = (np.matmul(self.__weights[strWL].T, dz[idx_l + 1])
+                             * self.__cache[strA] * (1 - self.__cache[strA]))
 
-            if idx_1 == self.__L:
-                self.__weights[strW] -= (np.matmul(dz_l), self.__cache["A"
-                                         + (str(idx_l - 1))].T) * alpha / m)
-                self.__weights[strb] -= (dz_l.mean(axis=1, keepdims=True)
+            if idx_l == self.__L:
+                self.__weights[strW] -= (np.matmul(dz[idx_l]), self.__cache["A"
+                                         + (str(idx_l - 1))].T) * (alpha / m)
+                self.__weights[strb] -= (dz[idx_l].mean(axis=1, keepdims=True)
                                          * alpha)
