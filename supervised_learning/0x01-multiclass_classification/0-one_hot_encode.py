@@ -12,9 +12,9 @@ def one_hot_encode(Y, classes):
     classes is max num classes found in Y
     """
     b = np.zeros((Y.shape[0], classes + 1))
-    if Y.any():
+    try:
         for cl, m in enumerate(Y):
             b[cl][m] = 1
-            return b
-        else:
-            return None
+        return b
+    except Exception:
+        return None
