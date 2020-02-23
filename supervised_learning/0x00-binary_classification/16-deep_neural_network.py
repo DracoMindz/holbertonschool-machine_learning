@@ -33,4 +33,3 @@ class DeepNeuralNetwork:
                 self.weights[mWts] = (np.random.randn(layers[i_lyr],
                                       layers[i_lyr - 1])
                                       * np.sqrt(2 / layers[i_lyr - 1]))
-                self.weights[mB] = np.zeros((layers[i_lyr - 1], 1))
