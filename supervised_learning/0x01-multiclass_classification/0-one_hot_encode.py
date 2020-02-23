@@ -11,10 +11,10 @@ def one_hot_encode(Y, classes):
     m is num of examples
     classes is max num classes found in Y
     """
-    b = np.zeros((Y.shape[0], classes + 1))
+    b = np.zeros((Y.shape[0], classes))
     try:
         for cl, m in enumerate(Y):
-            b[cl][m] = 1
+            b[m][cl] = 1
         return b
     except Exception:
         return None
