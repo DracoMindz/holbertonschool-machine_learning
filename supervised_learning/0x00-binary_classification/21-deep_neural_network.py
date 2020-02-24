@@ -101,12 +101,14 @@ class DeepNeuralNetwork:
             strA = "A" + str(idx_l)
             strW = "W" + str(idx_l)
             strb = "b" + str(idx_l)
+            strAW = "A" + str(idx_l - 1)
             if idx_l == self.__L - 1:
                 dz[idx_l] = (np.matmul(self.__weights[strWL].T, dz[idx_l + 1])
                              * self.__cache[strA] * (1 - self.__cache[strA]))
 
             if idx_l == self.__L:
-                self.__weights[strW] -= (np.matmul(dz[idx_l]), self.__cache["A"
-                                         + (str(idx_l - 1))].T) * (alpha / m)
+                self.__weights[strW] -= (np.matmul((dz[idx_l]),
+                                         self.__cache[(strAW)].T) * alpha /
+                                         self.cache[(strAW)].shape[1])
                 self.__weights[strb] -= (dz[idx_l].mean(axis=1, keepdims=True)
                                          * alpha)
