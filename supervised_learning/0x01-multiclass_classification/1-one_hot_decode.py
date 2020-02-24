@@ -18,5 +18,5 @@ def one_hot_decode(one_hot):
         return None
     try:
         return np.argmax(one_hot, axis=0)
-    except TypeError:
+    except Exception:
         return None
