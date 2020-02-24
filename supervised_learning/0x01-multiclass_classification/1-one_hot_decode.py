@@ -10,6 +10,8 @@ def one_hot_decode(one_hot):
     (classes, m)
     """
 
+    if  not isinstance(one_hot, np.ndarray):
+        return None
     if len(one_hot.shape) != 2 or len(one_hot) == 0:
         return None
     if type(one_hot) is not np.ndarray:
