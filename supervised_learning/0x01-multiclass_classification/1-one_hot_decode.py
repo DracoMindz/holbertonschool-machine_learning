@@ -17,7 +17,5 @@ def one_hot_decode(one_hot):
         return None
     if not np.all((one_hot == 0) | (one_hot == 1)):
         return None
-    try:
+    else:
         return np.argmax(one_hot, axis=0)
-    except IndexError:
-        return None
