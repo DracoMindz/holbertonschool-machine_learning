@@ -109,6 +109,6 @@ class DeepNeuralNetwork:
             if idx_l == self.__L:
                 self.__weights[strW] -= (np.matmul((dz[idx_l]),
                                          self.__cache[(strAW)].T) * alpha /
-                                         self.cache[(strAW)].shape[1])
+                                         self.__cache[(strAW)].shape[1])
                 self.__weights[strb] -= (dz[idx_l].mean(axis=1, keepdims=True)
                                          * alpha)
