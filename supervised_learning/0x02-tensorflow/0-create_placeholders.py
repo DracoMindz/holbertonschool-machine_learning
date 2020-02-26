@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """function returns two placholders"""
 
-import numpy as np
 import tensorflow as tf
 
 
