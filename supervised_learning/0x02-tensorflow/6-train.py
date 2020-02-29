@@ -55,3 +55,4 @@ def train(X_train, Y_train, X_valid, Y_valid, layer_sizes,
             print('\tTraining Accuracy:'.format(vAccuracy))
         session.run(train, feed_dict={x: X_train, y: Y_train})
     return tf.train.Saver.save(session, save_path)
+    session.close()
