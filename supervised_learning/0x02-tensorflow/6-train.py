@@ -40,7 +40,7 @@ def train(X_train, Y_train, X_valid, Y_valid, layer_sizes,
     z = tf.global_variables_initializer()
     session.run(z)
 
-    for i in range(0, iterations):
+    for i in range(0, iterations + 1):
         if (i == 0) or (i % 100):
             print('After {} iterations:'.format(i))
             tLoss, taccuracy = session.run((loss, accuracy),
