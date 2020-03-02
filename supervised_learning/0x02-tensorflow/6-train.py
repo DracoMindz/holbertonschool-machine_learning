@@ -36,7 +36,7 @@ def train(X_train, Y_train, X_valid, Y_valid, layer_sizes,
     tf.add_to_collectino('loss', loss)
     tf.add_to_collection('accuracy', accuracy)
     tf.add_to_collection('train', train)
-    tf.Graph.get_collection(x, y, y_pred, loss, accuracy, train)
+    # tf.Graph.get_collection(x, y, y_pred, loss, accuracy, train)
     z = tf.global_variables_initializer()
     session.run(z)
 
