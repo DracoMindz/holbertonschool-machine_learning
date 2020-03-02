@@ -38,9 +38,10 @@ def train(X_train, Y_train, X_valid, Y_valid, layer_sizes,
     tf.add_to_collection('train', train)
     # tf.Graph.get_collection(x, y, y_pred, loss, accuracy, train)
     z = tf.global_variables_initializer()
-    session.run(z)
     saver = tf.train.Saver()
-    for i in range(0, iterations):
+
+    session.run(z)
+    for i in range(iterations + 1):
         if (i == 0) or (i % 100 == 0):
             print('After {} iterations:'.format(i))
             tLoss, taccuracy = session.run((loss, accuracy),
@@ -54,4 +55,4 @@ def train(X_train, Y_train, X_valid, Y_valid, layer_sizes,
             print('\tTraining Cost:'.format(vLoss))
             print('\tTraining Accuracy:'.format(vAccuracy))
         session.run(train, feed_dict={x: X_train, y: Y_train})
-return saver.save(session, save_path)
+    return saver.save(session, save_path)
