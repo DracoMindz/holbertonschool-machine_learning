@@ -41,7 +41,7 @@ def train(X_train, Y_train, X_valid, Y_valid, layer_sizes,
     session.run(z)
 
     for i in range(0, iterations):
-        if (i == 0) or (i % 100 = 0):
+        if (i == 0) or (i % 100 == 0):
             print('After {} iterations:'.format(i))
             tLoss, taccuracy = session.run((loss, accuracy),
                                            feed_dict={x: X_train,
