@@ -2,7 +2,6 @@
 """function normalizes(standardizes) a matrix"""
 
 import numpy as np
-import tensorflow as tf
 
 
 def normalize(X, m, s):
@@ -13,4 +12,5 @@ def normalize(X, m, s):
     d id the num of data points
     nx is num of features
     """
-    return (X - m) / s
+    normX = (X - m) / s
+    return (normX)
