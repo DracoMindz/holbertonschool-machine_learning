@@ -15,8 +15,5 @@ def learning_rate_decay(alpha, decay_rate, global_step, decay_step):
     decay_step: num passes gradient descent that occur
                 before alpha is decayed further
     """
-    return tf.train.inverse_time_decay(learning_rate=alpha,
-                                       global_step=global_step,
-                                       decay_step=decay_step,
-                                       decay_rate=decay_rate
-                                       staircase=True)
+    return tf.train.inverse_time_decay(alpha, global_step, decay_step,
+                                       decay_rate, staircase=True)
