@@ -3,8 +3,6 @@
 function updates learning rate using inverse time decay
 """
 
-import numpy as np
-
 
 def learning_rate_decay(alpha, decay_rate, global_step, decay_step):
     """
@@ -14,4 +12,4 @@ def learning_rate_decay(alpha, decay_rate, global_step, decay_step):
     decay_step: num of passes gradient descent should occur
                 before alpha is decayed further
     """
-    return alpha / (1 + decay_rate * (global_step / decay_step))
+    return alpha / (1 + decay_rate * int(global_step / decay_step))
