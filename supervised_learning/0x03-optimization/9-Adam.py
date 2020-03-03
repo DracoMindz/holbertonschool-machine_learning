@@ -20,9 +20,6 @@ def update_variables_Adam(alpha, beta1, beta2, epsilon,
     t: time step used for bias correction
     """
 
-    Vdv == 0
-    Sdv == 0
-
     """momentum for beta 1"""
     Vdv = beta1*v + (1 - beta1) * grad
     Vds = beta1*s + (1 - beta1) * grad
