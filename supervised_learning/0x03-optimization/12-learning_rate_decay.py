@@ -1,9 +1,8 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 """
 function creates learning rate operation in tf
 using inverse time decay
 """
-
 import tensorflow as tf
 
 
