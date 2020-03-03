@@ -1,4 +1,4 @@
-#!/usr/bin/env pythons
+#!/usr/bin/env python3
 """
 function creates training op for NN in tf
 using RMSProp optimization algorithm
