@@ -4,7 +4,6 @@ function creates training op for NN in tf
 uses gradient descent w/ momentum op
 """
 
-import numpy as np
 import tensorflow as tf
 
 
