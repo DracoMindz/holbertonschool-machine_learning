@@ -36,4 +36,4 @@ def update_variables_Adam(alpha, beta1, beta2, epsilon,
     Sds_corr = Sds / (1 - beta2**t)
     """updated variable"""
     W_var = var - alpha*(Vdv_corr / ((Sdv_corr**(1/2)) + epsilon))
-    return W_var, Vdv_corr, Vds_corr
+    return W_var, Vdv, Vds
