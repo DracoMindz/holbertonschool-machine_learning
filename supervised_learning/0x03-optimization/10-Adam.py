@@ -5,7 +5,7 @@ using the Adam optimization algorithm
 """
 
 
-import tensorflow tf
+import tensorflow as tf
 
 
 def create_Adam_op(loss, alpha, beta1, beta2, epsilon):
