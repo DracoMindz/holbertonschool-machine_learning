@@ -3,7 +3,7 @@
 creates a confusion matrix
 """
 
-import numpy as py
+import numpy as np
 
 
 def create_confusion_matrix(labels, logits):
