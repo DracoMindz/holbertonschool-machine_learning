@@ -14,5 +14,5 @@ def f1_score(confusion):
     classes is the number of classes
     """
     sen_arr = sensitivity(confusion)
-    prec_arr = sensitivity(confusion)
+    prec_arr = precision(confusion)
     return (2 * ((prec_arr * sen_arr) / (prec_arr + sen_arr)))
