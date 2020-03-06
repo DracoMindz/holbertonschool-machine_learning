@@ -2,9 +2,6 @@
 """function slices a matrix along a soecific axes"""
 
 
-import numpy as np
-
-
 def np_slice(matrix, axes={}):
     """slice matrix along axis"""
     chop = [slice(None)] * (max(axes) + 1)
