@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-calculates the specificity for each class in a confusion matrix
+calculates the specificity each class in a confusion matrix
 """
 
 import numpy as np
