@@ -18,11 +18,11 @@ def create_batch_norm_layer(prev, n, activation):
     batch_mean, batch_var = tf.nn.moments(mm(prev), axes=[0])
 
     beta = (tf.get_variable("beta", [n],
-                               initializer=tf.zeros_initializer(),
-                               trainable=True))
+                            initializer=tf.zeros_initializer(),
+                            trainable=True))
     gamma = (tf.get_variable("gamma", [n],
-                                initializer=tf.ones_initializer(),
-                                trainable=True))
+                             initializer=tf.ones_initializer(),
+                             trainable=True))
     normlayer = (tf.nn.batch_normalization(mm(prev), mean=batch_mean,
                                            variance=batch_var, offset=beta,
                                            scale=gamma,
