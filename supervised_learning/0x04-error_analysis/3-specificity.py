@@ -12,6 +12,8 @@ def specificity(confusion):
     classes is the number of classes
     """
     for m in range(confusion.shape[0]):
-        trueNeg = (np.delete(np.delete(confusion, m, 1)), m, 0).sum()
+        neg = np.delete(confusion, m, 1)
+        neg = (np.delete(neg), m, 0)
+        trueNeg = (sum(sum(neg)))
         falsePos = np.delete(confusion, m, 0).sum()
-        return (trueNeg / (trueNeg + falsePos))
+        return np.asarray([(trueNeg / (trueNeg + falsePos))])
