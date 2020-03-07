@@ -20,6 +20,6 @@ def batch_norm(Z, gamma, beta, epsilon):
 
     std = np.sqrt(var + epsilon)
     Z_cent = (Z - mean)
-    Z_norm = Z_cent / (std + epsilon)
+    Z_norm = Z_cent / (std)
     Z_out = gamma * Z_norm + beta
     return Z_out
