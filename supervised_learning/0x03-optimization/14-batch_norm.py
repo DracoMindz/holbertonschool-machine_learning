@@ -3,7 +3,6 @@
 function creates  a batch normalization layer for NN
 in tensorflow
 """
-import numpy
 import tensorflow as tf
 
 
