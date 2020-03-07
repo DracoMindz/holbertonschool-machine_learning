@@ -14,5 +14,5 @@ def specificity(confusion):
     for m in range(confusion.shape[0]):
         trueNeg = np.asarray(np.delete(np.delete(confusion, m, 1)), m, 0).sum()
         falsePos = np.delete(confusion, m, 0).sum()
-        specificity = trueNeg / (trueNeg + falsePos)
-        return specificity
+        specify = trueNeg / (np.sum(trueNeg, falsePos))
+        return (specify)
