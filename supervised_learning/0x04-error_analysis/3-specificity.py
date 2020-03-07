@@ -16,4 +16,4 @@ def specificity(confusion):
         neg = np.delete((neg), m, 0)
         trueNeg = (sum(sum(neg)))
         tNFP = np.delete(confusion, m, 0).sum()
-        return np.asarray([trueNeg / tNFP])
+        return np.asarray([trueNeg / float(tNFP)])
