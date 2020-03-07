@@ -13,7 +13,7 @@ def specificity(confusion):
     """
     for m in range(confusion.shape[0]):
         neg = np.delete(confusion, m, 1)
-        neg = (np.delete(neg), m, 0)
+        neg = np.delete((neg), m, 0)
         trueNeg = (sum(sum(neg)))
-        falsePos = np.delete(confusion, m, 0).sum()
-        return np.asarray([(trueNeg / (trueNeg + falsePos))])
+        tNFP = np.delete(confusion, m, 0).sum()
+        return np.asarray([trueNeg / tNFP])
