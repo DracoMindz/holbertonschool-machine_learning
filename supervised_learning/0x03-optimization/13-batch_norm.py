@@ -15,12 +15,11 @@ def batch_norm(Z, gamma, beta, epsilon):
     epsilon: small num used to avoid division by zero
     """
 
-    mean = np.mean(axis=0).reshape(Z.shape)
-    var = np.var(axis=0).reshape(Z.shape)
+    mean = np.mean(Z, axis=0)
+    var = np.var(Z, axis=0)
 
-    std = np.sqrt(S_var + epsilon)
-    Z_cent = Z - mean
+    std = np.sqrt(var + epsilon)
+    Z_cent = (Z - mean)
     Z_norm = Z_cent / (std + epsilon)
     Z_out = gamma * Z_norm + beta
-    cache = (Z_norm, Z_cent, std, gamma)
-    return out, cache
+    return Z_out
