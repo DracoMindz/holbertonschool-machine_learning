@@ -1,4 +1,4 @@
-#!/usr /bin/env python3
+#!/usr/bin/env python3
 """
 function that calculates cost of NN using L2
 """
