@@ -14,8 +14,9 @@ def l2_reg_cost(cost, lambtha, weights, L, m):
     m: num data points used
     """
     weights_sum = 0
-    for key, num in weights:
+    for key, num in weights.items():   # weights id a key value dict
         if (key[0] == "W"):
+            num = weights[key]
             weights_sum += np.linalg.norm(num)
     L2_Cost = (cost + (lambtha / (2 * m)) * weights_sum)
     return(L2_Cost)
