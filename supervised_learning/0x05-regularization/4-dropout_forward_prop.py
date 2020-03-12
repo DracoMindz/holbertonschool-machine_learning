@@ -21,7 +21,7 @@ def dropout_forward_prop(X, weights, L, keep_prob):
         drop0 = np.random.binomial(1, keep_prob, size=Z.shape)
         if lyr == L - 1:   # last layer
             cache["A"+str(idx)] = ((np.exp(Z)) / np.sum((np.exp(Z)),
-                                                        asis=0, keepdims=True))
+                                                        axis=0, keepdims=True))
         else:  # updates
             cache["A"+str(idx)] = np.tanh(Z)   # layers use tanH activation
             cache["D"+str(idx)] = drop   # dropOut
