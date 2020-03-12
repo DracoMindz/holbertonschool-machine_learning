@@ -15,16 +15,16 @@ def dropout_forward_prop(X, weights, L, keep_prob):
     cache = {}
     cache["A0"] = X
     for lyr in range(L):
-        idx = lyr + 1
+        idx = (lyr + 1)
         Zprop = np.matmul(weights["W"+str(idx)], cache["A"+str(lyr)])
         Z = Zprop + weights["b"+str(idx)]
-        drop0 = np.random.binomial(1, keep_prob, size=Z.shape)
+        drop_O = np.random.binomial(1, keep_prob, size=Z.shape)
         if lyr == L - 1:   # last layer
             cache["A"+str(idx)] = ((np.exp(Z)) / np.sum((np.exp(Z)),
                                                         axis=0, keepdims=True))
         else:  # updates
             cache["A"+str(idx)] = np.tanh(Z)   # layers use tanH activation
-            cache["D"+str(idx)] = drop   # dropOut
-            cache["A"+str(idx)] *= drop
+            cache["D"+str(idx)] = drop_O  # dropOut
+            cache["A"+str(idx)] *= drop_O
             cache["A"+str(idx)] /= keep_prob
     return cache
