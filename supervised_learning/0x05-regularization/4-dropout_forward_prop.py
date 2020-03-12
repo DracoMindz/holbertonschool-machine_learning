@@ -3,7 +3,6 @@
 Function conducts forward propagation using Dropout
 """
 import numpy as np
-import tensorflow as tf
 
 
 def dropout_forward_prop(X, weights, L, keep_prob):
