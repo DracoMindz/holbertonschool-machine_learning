@@ -10,7 +10,8 @@ def optimize_model(network, alpha, beta1, beta2):
     Adam optimizer for keras NN
     """
     network.compile(optimizer=K.optimizers.Adam(learning_rate=alpha,
-                                              beta_1=beta1,
-                                              beta_2=beta2),
+                                                beta_1=beta1,
+                                                beta_2=beta2),
                   loss='categorical_crossentrophy',
                   metrics=['accuracy'])
+    return None
