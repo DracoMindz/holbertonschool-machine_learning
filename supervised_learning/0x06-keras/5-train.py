@@ -1,4 +1,4 @@
-#!/ usr/bin/env python3
+#!/usr/bin/env python3
 """
 function to analyze validation data
 """
@@ -14,6 +14,6 @@ def train_model(network, data, labels, batch_size, epochs,
     """
 
     history = network.fit(data, labels, epochs=epochs, batch_size=batch_size,
-                          shuffle=shuffle, verbose=verbose,
-                          validation_data=validation_data)
+                          validation_data=validation_data,
+                          verbose=verbose, shuffle=shuffle,)
     return history
