@@ -2,7 +2,6 @@
 """
 function trains a model using mini-batch gradient descent
 """
-import numpy as np
 import tensorflow.keras as K
 
 
