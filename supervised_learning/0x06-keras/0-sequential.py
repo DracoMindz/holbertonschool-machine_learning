@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-function builds a nueral network w/ Keras
+function builds a neural network w/ Keras
 use dropout
 """
 import tensorflow.keras as K
@@ -16,7 +16,6 @@ def build_model(nx, layers, activations, lambtha, keep_prob):
     """
 
     b_reg = K.regularizers.l2
-
     model = K.Sequential([
         K.layers.Dense(layers[0], input_shape=(nx,), activation=activations[0],
                        kernel_regularizer=b_reg(lambtha))])
