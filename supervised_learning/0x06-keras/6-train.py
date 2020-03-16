@@ -15,7 +15,9 @@ def train_model(network, data, labels, batch_size, epochs,
                     early stopping should be used
     patience: patience used for early stopping
     """
-    callbacks = K.EarlyStopping(patience=patience, monitor='validation_loss')
+    callbacks = [
+        K.EarlyStopping(patience=patience, monitor='validation_loss')
+        ]
 
     history = network.fit(data, labels, epochs=epochs, batch_size=batch_size,
                           callbacks=callbacks,
