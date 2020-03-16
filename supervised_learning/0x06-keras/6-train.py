@@ -15,12 +15,17 @@ def train_model(network, data, labels, batch_size, epochs,
                     early stopping should be used
     patience: patience used for early stopping
     """
-    callbacks = [
-        K.EarlyStopping(patience=patience, monitor='validation_loss')
-        ]
+    if validation_data:
+        callbacks = [K.EarlyStopping(patience=patience,
+                                     monitor='validation_loss')]
 
-    history = network.fit(data, labels, epochs=epochs, batch_size=batch_size,
-                          callbacks=callbacks,
-                          validation_data=validation_data,
-                          verbose=verbose, shuffle=shuffle,)
+        history = network.fit(data, labels, epochs=epochs,
+                              batch_size=batch_size, callbacks=callbacks,
+                              validation_data=validation_data,
+                              verbose=verbose, shuffle=shuffle,)
+    if not validation_data:
+        history = network.fit(data, labels, epochs=epochs,
+                              batch_size=batch_size,
+                              validation_data=validation_data,
+                              verbose=verbose, shuffle=shuffle,)
     return history
