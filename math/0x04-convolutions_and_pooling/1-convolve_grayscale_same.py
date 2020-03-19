@@ -6,7 +6,7 @@ performs a same convolution on grayscale images:
 import numpy as np
 
 
-def convolve_grayscale_valid_same(images, kernel):
+def convolve_grayscale_same(images, kernel):
     """
     images: numpy.ndarray w/ shape (m, h, w)
     kernel: numpy.ndarray w/ shape (kh, kw)
@@ -28,11 +28,11 @@ def convolve_grayscale_valid_same(images, kernel):
                         (pad_h, pad_h), (pad_w, pad_w)),
                         mode='constant', constant_values=0)
     cv_output = np.zeros((m, h, w))
-    image = np.arange(m)
+    image = np.arange(0, m)
     for y in range(h):
         for x in range(w):
             cv_output[image, y, x] = (np.sum(pad_images
-                                            [image, y:kh + y, x:kw + x] *
-                                            kernel,
-                                            axis=(1, 2)))
+                                             [image, y:kh + y, x:kw + x] *
+                                             kernel,
+                                             axis=(1, 2)))
     return cv_output
