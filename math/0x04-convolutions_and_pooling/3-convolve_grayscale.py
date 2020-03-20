@@ -28,27 +28,44 @@ def convolve_grayscale(images, kernel, padding='same', stride=(1, 1)):
     kh = kernel.shape[0]
     kw = kernel.shape[1]
     sh = stride[0]
-    sw = stride[0]
-    if padding == 'same':
-        ph = int((kh - 1)/2)
-        pw = int((kw - 1)/2)
-    if padding == 'valid':
-        cust_h = h
-        cust_w = w
-        cpad_images = images
+    sw = stride[1]
+    # ph = padding[0]
+    # pw = padding[1]
+    output_h = 0
+    output_w = 0
+
     if type(padding) == 'tuple':
         ph = padding[0]
         pw = padding[1]
-    if type(padding) == 'tuple' or padding == 'same':
-        cpad_images = np.pad(images, pad_width=((0, 0),
-                             (ph, ph), (pw, pw)),
-                             mode='constant', constant_values=0)
-        cust_h = cpad_images.shape[1]
-        cust_w = cpad_images.shape[2]
-    cust_sh = int(((cust_h-kh)/sh) + 1)
-    cust_sw = int(((cust_w-kw)/sw) + 1)
+
+    # valid has no padding
+    if padding == 'valid':
+        ph = 0
+        pw = 0
+
+    # if filter is odd or even
+    if padding == 'same':
+        if kh % 2 == 0:
+            ph = int((kh)/2)
+            output_h = h - kh + (2*ph)
+        else:
+            ph = int((kh - 1)/2)
+            output_h = h - kh + 1 + (2*ph)
+        if kw % 2 == 0:
+            pw = int((kw)/2)
+            output_w = w - kw + (2*pw)
+        else:
+            pw = int((kw - 1)/2)
+            output_w = w - kw + 1 + (2*pw)
+
+    cpad_images = np.pad(images, pad_width=((0, 0),
+                         (ph, ph), (pw, pw)),
+                         mode='constant', constant_values=0)
+
+    cust_sh = int(((h - kh + (2*ph))/sh) + 1)
+    cust_sw = int(((w - kw + (2*pw))/sw) + 1)
     cv_output = np.zeros((m, cust_sh, cust_sw))
-    image = np.arange(m)
+    image = np.arange(0, m)
     for y in range(cust_sh):
         for x in range(cust_sw):
             cv_output[image, y, x] = (np.sum(cpad_images
