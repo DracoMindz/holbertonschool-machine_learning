@@ -29,11 +29,11 @@ def pool(images, kernel_shape, stride, mode='max'):
     kh = kernel_shape[0]
     kw = kernel_shape[1]
     sh = stride[0]
-    sw = stride[0]
+    sw = stride[1]
     height_sh = int(((h-kh)/sh) + 1)
     width_sw = int(((w-kw)/sw) + 1)
     image = np.arange(m)
-    ch_image = np.arange(c)
+    # ch_image = np.arange(c)
     cv_output = np.zeros((m, height_sh, width_sw, c))
     for y in range(height_sh):
         for x in range(width_sw):
