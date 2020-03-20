@@ -45,22 +45,12 @@ def convolve_grayscale(images, kernel, padding='same', stride=(1, 1)):
 
     # if filter is odd or even
     if padding == 'same':
-        if kh % 2 == 0:
-            ph = int((kh)/2)
-            output_h = h - kh + (2*ph)
-        else:
-            ph = int((kh - 1)/2)
-            output_h = h - kh + 1 + (2*ph)
-        if kw % 2 == 0:
-            pw = int((kw)/2)
-            output_w = w - kw + (2*pw)
-        else:
-            pw = int((kw - 1)/2)
-            output_w = w - kw + 1 + (2*pw)
-
-    cpad_images = np.pad(images, pad_width=((0, 0),
-                         (ph, ph), (pw, pw)),
-                         mode='constant', constant_values=0)
+        ph = int(((h-1)*sh+kh-h)/2) + 1
+        pw = int(((w-1)*sw+kw-w)/2) + 1
+    if padding == 'same' or type(padding) == tuple:
+        images = np.pad(images,
+                        pad_width=((0, 0), (ph, ph), (pw, pw)),
+                        mode='constant', constant_values=0)
 
     cust_sh = int(((h - kh + (2*ph))/sh) + 1)
     cust_sw = int(((w - kw + (2*pw))/sw) + 1)
@@ -68,7 +58,7 @@ def convolve_grayscale(images, kernel, padding='same', stride=(1, 1)):
     image = np.arange(0, m)
     for y in range(cust_sh):
         for x in range(cust_sw):
-            cv_output[image, y, x] = (np.sum(cpad_images
+            cv_output[image, y, x] = (np.sum(images
                                       [image, y*sh:(kh + (y*sh)),
                                        x*sw:(kw + (x*sw))] *
                                       kernel,
