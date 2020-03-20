@@ -33,31 +33,28 @@ def convolve_channels(images, kernel, padding='same',
     sh = stride[0]
     sw = stride[0]
     if padding == 'same':
-        ph = int((kh - 1)/2)
-        pw = int((kw - 1)/2)
+        ph = int(((sh*h) - sh + kh - h)/2) + 1
+        pw = int(((sw*w) - sw + kw - w)/2) + 1
     if padding == 'valid':
-        cust_h = h
-        cust_w = w
+        ph = 0
+        pw = 0
         cpad_images = images
     if type(padding) == 'tuple':
         ph = padding[0]
         pw = padding[1]
-    if type(padding) == 'tuple' or padding == 'same':
-        cpad_images = np.pad(images, pad_width=((0, 0),
-                             (ph, ph), (pw, pw), (0, 0)),
-                             mode='constant', constant_values=0)
-        cust_h = cpad_images.shape[1]
-        cust_w = cpad_images.shape[2]
-    cust_sh = int(((cust_h-kh)/sh) + 1)
-    cust_sw = int(((cust_w-kw)/sw) + 1)
+
+    cpad_images = np.pad(images, [(0, 0), (ph, ph), (pw, pw), (0, 0)],
+                         mode='constant', constant_values=0)
+    cust_sh = int(((h - kh + (2*ph)) / sh) + 1)
+    cust_sw = int(((w - kw + (2*pw)) / sw) + 1)
     cv_output = np.zeros((m, cust_sh, cust_sw))
-    image = np.arange(m)
-    ch_image = np.arange(c)
+    image = np.arange(0, m)
+
     for y in range(cust_sh):
         for x in range(cust_sw):
-            cv_output[image, y, x] = (np.sum(cpad_images
-                                      [image, y*sh:(kh + (y*sh)),
-                                       x*sw:(kw + (x*sw))] *
-                                      kernel,
-                                      axis=(1, 2, 3)))
+            cv_output[image, y, x] = np.sum(cpad_images
+                                            [image, y*sh:(kh + (y*sh)),
+                                             x*sw:(kw + (x*sw))] *
+                                            kernel,
+                                            axis=(1, 2, 3))
     return cv_output
