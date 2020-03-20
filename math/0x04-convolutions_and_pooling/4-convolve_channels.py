@@ -38,8 +38,7 @@ def convolve_channels(images, kernel, padding='same',
     if padding == 'valid':
         ph = 0
         pw = 0
-        cpad_images = images
-    if type(padding) == 'tuple':
+    if type(padding) == tuple:
         ph = padding[0]
         pw = padding[1]
 
