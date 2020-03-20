@@ -48,7 +48,7 @@ def convolve_channels(images, kernel, padding='same',
     cust_sh = int(((h + 2*ph-kh) / sh) + 1)
     cust_sw = int(((w + 2*pw-kw) / sw) + 1)
     cv_output = np.zeros((m, cust_sh, cust_sw))
-    image = np.arange(m)
+    image = np.arange(0, m)
 
     for y in range(cust_sh):
         for x in range(cust_sw):
