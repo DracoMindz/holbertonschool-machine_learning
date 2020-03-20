@@ -2,7 +2,6 @@
 """
 performs a convolution on images with channels
 """
-
 import numpy as np
 
 
@@ -31,7 +30,7 @@ def convolve_channels(images, kernel, padding='same',
     kh = kernel.shape[0]
     kw = kernel.shape[1]
     sh = stride[0]
-    sw = stride[0]
+    sw = stride[1]
 
     if padding == 'valid':
         ph = 0
@@ -53,9 +52,9 @@ def convolve_channels(images, kernel, padding='same',
 
     for y in range(cust_sh):
         for x in range(cust_sw):
-            cv_output[image, y, x] = np.sum(images
-                                            [image, y*sh:(kh + (y*sh)),
-                                             x*sw:(kw + (x*sw))] *
-                                            kernel,
-                                            axis=(1, 2, 3))
+            cv_output[image, y, x] = (np.sum(images
+                                             [image, y*sh:(kh + (y*sh)),
+                                              x*sw:(kw + (x*sw))] *
+                                             kernel,
+                                             axis=(1, 2, 3)))
     return cv_output
