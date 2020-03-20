@@ -33,25 +33,24 @@ def convolve(images, kernels, padding='same',
     kw = kernels.shape[1]
     nc = kernels.shape[3]
     sh = stride[0]
-    sw = stride[0]
+    sw = stride[1]
     if padding == 'same':
-        ph = int((kh - 1)/2)
-        pw = int((kw - 1)/2)
+        ph = int(((h-1)*sh+kh-h)/2) + 1
+        pw = int(((w-1)*sw+kw-w)/2) + 1
     if padding == 'valid':
-        cust_h = h
-        cust_w = w
-        cpad_images = images
+        ph = 0
+        pw = 0
     if type(padding) == 'tuple':
         ph = padding[0]
         pw = padding[1]
     if type(padding) == 'tuple' or padding == 'same':
-        cpad_images = np.pad(images, pad_width=((0, 0),
-                             (ph, ph), (pw, pw), (0, 0)),
-                             mode='constant', constant_values=0)
+        images = np.pad(images,
+                        pad_width=((0, 0),(ph, ph), (pw, pw), (0, 0)),
+                        mode='constant', constant_values=0)
         cust_h = cpad_images.shape[1]
         cust_w = cpad_images.shape[2]
-    cust_sh = int(((cust_h-kh)/sh) + 1)
-    cust_sw = int(((cust_w-kw)/sw) + 1)
+    cust_sh = int(((h + 2*ph-kh)/sh) + 1)
+    cust_sw = int(((w + 2*pw-kw)/sw) + 1)
     cv_output = np.zeros((m, cust_sh, cust_sw, nc))
     image = np.arange(m)
     ch_image = np.arange(c)
