@@ -1,4 +1,4 @@
-#!/usr/bin/env pyhton3
+#!/usr/bin/env python3
 """
 modified version of LeNet-5 architechture using keras
 """
