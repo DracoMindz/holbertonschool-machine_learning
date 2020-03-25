@@ -1,4 +1,4 @@
-#!/use/bin/env python3
+#!/usr/bin/env python3
 """
 modified version of LeNet-5 w/ tensorflow
 """
