@@ -41,7 +41,7 @@ def lenet5(X):
                                 kernel_initializer=init)(flatPool)
     layer6_FC2 = K.layers.Dense(units=84, activation=act,
                                 kernel_initializer=init)(layer5_FC1)
-    layer7_output = K.layers.Dense(units=10, activation=act,
+    layer7_output = K.layers.Dense(units=10, activation='softmax',
                                    kernel_initializer=init)(layer6_FC2)
     model = K.models.Model(X, layer7_output)
     model.compile(optimizer=K.optimizers.Adam(),
