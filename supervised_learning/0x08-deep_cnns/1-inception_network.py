@@ -25,10 +25,10 @@ def inception_network():
     netLayers = K.layers.MaxPool2D(pool_size=3, strides=2,
                                    padding='same')(netLayers)
 
-    netLayers = K.layers.Conv2D(filters=64, kernel_size=1, strides=1,
+    netLayers = K.layers.Conv2D(filters=64, kernel_size=1,
                                 padding='same', activation='relu',
                                 kernel_initializer=init)(netLayers)
-    netLayers = K.layers.Conv2D(filters=192, kernel_size=3, strides=1,
+    netLayers = K.layers.Conv2D(filters=192, kernel_size=3,
                                 padding='same', activation='relu',
                                 kernel_initializer=init)(netLayers)
     netLayers = K.layers.MaxPool2D(pool_size=3, strides=2,
@@ -52,9 +52,9 @@ def inception_network():
     netLayers = inception_block(netLayers, [256, 160, 320, 32, 128, 128])
     netLayers = inception_block(netLayers, [384, 192, 384, 48, 128, 128])
 
-    netlayers = K.layers.AveragePooling2D(pool_size=7, strides=1)(netLayers)
+    avgPool = K.layers.AveragePooling2D(pool_size=7, strides=1)(netLayers)
 
-    netlayers = K.layers.Dropout(.4)(netLayers)
-    netlayers = K.layers.Dense(1000, activation='softmax',
-                               kernel_initializer=init)(netlayers)
-    return K.Model(inputData, netLayers)
+    dropOut = K.layers.Dropout(.4)(avgPool)
+    outData = K.layers.Dense(1000, activation='softmax',
+                             kernel_initializer=init)(dropOut)
+    return K.Model(inputData, outData)
