@@ -56,4 +56,4 @@ def resnet50():
     outputs = K.layers.Dense(units=1000,
                              activation='softmax',
                              kernel_initializer=init)(avgPool)
-    return K.Model(iData, outputs)
+    return K.models.Model(iData, outputs)
