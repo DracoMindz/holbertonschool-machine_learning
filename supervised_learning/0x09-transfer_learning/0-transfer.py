@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
 """
-Write a python script that trains a convolutional 
+Write a python script that trains a convolutional
 neural network to classify the CIFAR 10 dataset
 """
 
 import tensorflow.keras as K
-
 
 
 def load_data():
@@ -37,10 +36,9 @@ def model_def(Y_train):
         # get layers before fully connected layers
         if (layer.name[0:5] != 'block'):
             layer.trainiable = False
-    
-                                        
+
     modelY = K.Sequential()
-    
+
     modelY.add(vgg_bf)
     modelY.add(K.layers.Flatten())
     modelY.add(K.layers.Dense(512, activation='relu',
@@ -53,7 +51,7 @@ def model_def(Y_train):
 def compile_model(new_cnn):
     """ compile mode """
     """ compile model separate, vgg_bf classes=Y_train.shape[1] """
-    
+
     opt = K.optimizers.SGD(lr=0.001, momentum=0.9)
     new_cnn.compile(optimizer=opt,
                     loss='categorical_crossentropy',
@@ -62,14 +60,15 @@ def compile_model(new_cnn):
 
 
 def train_model(new_cnn, X_train, Y_train, X_test, Y_test, batch, epochs):
-    
-    dataImageGen = K.processing.image.ImageDataGenerator(rotation_range=14,
-                                                         width_shift_range=0.1,
-                                                         height_shift_range=0.1,
-                                                         horizontal_flip=True,
-                                                         fill_mode='nearest')    
-    dataImageGen.fit(X_train)
-    return new_cnn.fit_generator(dataImageGen.flow(X_train, Y_train, batch_size=batch ),
+
+    dataGen = K.processing.image.ImageDataGenerator(rotation_range=14,
+                                                    width_shift_range=0.1,
+                                                    height_shift_range=0.1,
+                                                    horizontal_flip=True,
+                                                    fill_mode='nearest')
+    dataGen.fit(X_train)
+    return new_cnn.fit_generator(dataGen.flow(X_train, Y_train,
+                                              batch_size=batch),
                                  steps_per_epoch=X_train.shape[0] / batch,
                                  epochs=epochs,
                                  varbose=1,
@@ -84,7 +83,7 @@ def preprocess_data(X, Y):
     X_p: numpy.ndarray containing preprocessed X
     Y_p: numpy.ndarray containing preprocessed Y
     Return: X_p, Y_p
-    
+
     trained model:  save in directory as cifar10.h5
                     should be compiled
                     validation accuracy of 88% or higher
@@ -92,20 +91,19 @@ def preprocess_data(X, Y):
     """
 
     X_p = K.applications.vgg16.preprocess_input(X)
-    Y_p = K.utils.to_categorical(Y, num_clases=10 )
+    Y_p = K.utils.to_categorical(Y, num_classes=10)
     return (X_p, Y_p)
-    
+
 
 if __name__ == '__main__':
-    # step by step make 
-    
-    batch = 60 
+    # step by step make
+
+    batch = 60
     epochs = 60
-    
+
     X_train, Y_train, X_test, Y_test = load_data()
     t_model = model_def(Y_train)
     t_model = compile_model(t_model)
-    history = train_model(t_model, X_train, Y_train, X_test, Y_test, batch, epochs)
-    
-    
+    history = train_model(t_model, X_train, Y_train,
+                          X_test, Y_test, batch, epochs)
     t_model.save('cifar10.h5')
