@@ -20,8 +20,8 @@ def load_data():
     X_test = X_test / 255
 
     # one hot target values
-    Y_train = K.utils.to_categorically(Y_train, 10)
-    Y_test = K.utils.to_categorically(Y_test, 10)
+    Y_train = K.utils.to_categorical(Y_train, 10)
+    Y_test = K.utils.to_categorical(Y_test, 10)
     return X_train, Y_train, X_test, Y_test
 
 
@@ -30,7 +30,8 @@ def model_def(Y_train):
     # use VGG16 for bottlensck features
     vgg_bf = K.applications.vgg16.VGG16(include_top=False,
                                         weights='imagenet',
-                                        input_shape=(32, 32, 3),
+                                        input_tensor=K.Input(
+                                            shape=(32, 32, 3)),
                                         classes=Y_train.shape[1])
     for layer in vgg_bf.layers:
         # get layers before fully connected layers
@@ -41,8 +42,8 @@ def model_def(Y_train):
 
     modelY.add(vgg_bf)
     modelY.add(K.layers.Flatten())
-    modelY.add(K.layers.Dense(512, activation='relu',
-                              kernel_initialization='he_uniform'))
+    modelY.add(K.layers.Dense(256, activation='relu',
+                              kernel_initializer='he_uniform'))
     modelY.add(K.layers.Dense(10, activation="softmax"))
     modelY.summary()
     return modelY
@@ -61,17 +62,16 @@ def compile_model(new_cnn):
 
 def train_model(new_cnn, X_train, Y_train, X_test, Y_test, batch, epochs):
 
-    dataGen = K.processing.image.ImageDataGenerator(rotation_range=14,
-                                                    width_shift_range=0.1,
-                                                    height_shift_range=0.1,
-                                                    horizontal_flip=True,
-                                                    fill_mode='nearest')
+    dataGen = K.preprocessing.image.ImageDataGenerator(rotation_range=15,
+                                                       width_shift_range=0.1,
+                                                       height_shift_range=0.1,
+                                                       horizontal_flip=True)
     dataGen.fit(X_train)
     return new_cnn.fit_generator(dataGen.flow(X_train, Y_train,
                                               batch_size=batch),
                                  steps_per_epoch=X_train.shape[0] / batch,
                                  epochs=epochs,
-                                 varbose=1,
+                                 verbose=1,
                                  validation_data=(X_test, Y_test))
 
 
@@ -98,8 +98,8 @@ def preprocess_data(X, Y):
 if __name__ == '__main__':
     # step by step make
 
-    batch = 60
-    epochs = 60
+    batch = 50
+    epochs = 50
 
     X_train, Y_train, X_test, Y_test = load_data()
     t_model = model_def(Y_train)
