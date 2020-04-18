@@ -2,7 +2,7 @@
 """
 Yolo Object Detection
 """
-import keras as K
+import tensorflow.keras as K
 import numpy as np
 
 
@@ -59,20 +59,20 @@ def process_outputs(self, outputs, image_size):
     box_confidences = []
 
     for output in range(len(outputs)):
-        grid_h, grid_w, anch_boxes, _ = outputs[output].shape 
+        grid_h, grid_w, anch_boxes, _ = outputs[output].shape
 
         # box_cl, box_c: bounding box parameters, sigmoid
-        box_p = 1 / (1 + np.exp(-(outputs[output][:, :, :, 5:])))
         box_c = 1 / (1 + np.exp(-(outputs[output][:, :, :, 4:5])))
-        box_class_probs.append(box_p)
         box_confidences.append(box_c)
+        box_p = 1 / (1 + np.exp(-(outputs[output][:, :, :, 5:])))
+        box_class_probs.append(box_p)
 
         # grid boxes
         xybox = 1 / (1 + np.exp(-(outputs[output][:, :, :, :2])))
         whbox = np.exp(outputs[output][:, :, :, 2:4])
-        reshapes = self.anchors.reshape(1, 1, self.anchors.shape[0],
+        a_tensor = self.anchors.reshape(1, 1, self.anchors.shape[0],
                                         anch_boxes, 2)
-        whbox *= reshapes[:, :, output, :, :]
+        whbox *= a_tensor[:, :, output, :, :]
 
         # grid image tile arange reshape
         imcol = np.tile(np.arange(0, grid_w),
