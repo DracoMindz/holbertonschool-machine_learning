@@ -81,7 +81,7 @@ def process_outputs(self, outputs, image_size):
                         grid_w).reshape(grid_w, grid_h).T
         row = imrow.reshape(grid_h, grid_w, 1, 1).repeat(3, axis=2)
         col = imcol.reshape(grid_h, grid_w, 1, 1).repeat(3, axis=2)
-        imgrid = np.conatenate((col, row), axis=3)
+        imgrid = np.concatenate((col, row), axis=3)
 
         # build boxes
         xybox = ((xybox + grid) / (grid_w, grid_h))
