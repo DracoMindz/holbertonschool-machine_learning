@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 """
-Class constructor
+Yolo Initialize
 """
 import tensorflow.keras as K
 
 
 class Yolo:
+    """Class constructor"""
     def __init__(self, model_path, classes_path, class_t, nms_t, anchors):
         """
         model_path: path to Darknet Keras model
