@@ -99,4 +99,4 @@ def process_outputs(self, outputs, image_size):
         box[..., 3] *= image_size[0]
         boxes.append(box)
 
-        return boxes, box_confidences, box_class_probs
+        return ((boxes, box_confidences, box_class_probs))
