@@ -84,7 +84,7 @@ def process_outputs(self, outputs, image_size):
         imgrid = np.concatenate((col, row), axis=3)
 
         # build boxes
-        xybox = ((xybox + grid) / (grid_w, grid_h))
+        xybox = ((xybox + imgrid) / (grid_w, grid_h))
         model_inputy = self.model.input.shape[2].value
         model_inputx = self.model.input.shape[1].value
 
