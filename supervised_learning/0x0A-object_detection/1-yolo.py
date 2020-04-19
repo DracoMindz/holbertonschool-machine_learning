@@ -6,7 +6,7 @@ import tensorflow.keras as K
 import numpy as np
 
 
-class Yolo:
+class Yolo():
     """Class constructor"""
     def __init__(self, model_path, classes_path, class_t, nms_t, anchors):
         """
@@ -61,7 +61,7 @@ def process_outputs(self, outputs, image_size):
     for output in range(len(outputs)):
         grid_h, grid_w, anch_boxes, _ = outputs[output].shape
 
-        # box_cl, box_c: bounding box parameters, sigmoid
+        # box_p, box_c: bounding box parameters, sigmoid
         box_c = 1 / (1 + np.exp(-(outputs[output][:, :, :, 4:5])))
         box_confidences.append(box_c)
         box_p = 1 / (1 + np.exp(-(outputs[output][:, :, :, 5:])))
@@ -72,7 +72,7 @@ def process_outputs(self, outputs, image_size):
         whbox = np.exp(outputs[output][:, :, :, 2:4])
         a_tensor = self.anchors.reshape(1, 1, self.anchors.shape[0],
                                         anch_boxes, 2)
-        whbox *= a_tensor[:, :, output, :, :]
+        whbox = whbox * a_tensor[:, :, output, :, :]
 
         # grid image tile arange reshape
         imcol = np.tile(np.arange(0, grid_w),
@@ -99,4 +99,4 @@ def process_outputs(self, outputs, image_size):
         box[..., 3] *= image_size[0]
         boxes.append(box)
 
-    return ((boxes, box_confidences, box_class_probs))
+    return (boxes, box_confidences, box_class_probs)
