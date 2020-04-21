@@ -40,21 +40,19 @@ def train(X_train, Y_train, X_valid, Y_valid, layer_sizes,
     z = tf.global_variables_initializer()
     saver = tf.train.Saver()
 
-    with tf.Session() as session:
-        session.run(z)
-        for i in range(0, iterations):
-            if i == 0 or i % 100 == 0:
-                print('After {} iterations:'.format(i))
-                tLoss, taccuracy = session.run((loss, accuracy),
-                                               feed_dict={x: X_train,
-                                                          y: Y_train})
-                print('\tTraining Cost:'.format(tLoss))
-                print('\tTraining Accuracy:'.format(taccuracy))
-                vLoss, vAccuracy = session.run((loss, accuracy),
-                                               feed_dict={x: X_valid,
-                                                          y: Y_valid})
-                print('\tTraining Cost:'.format(vLoss))
-                print('\tTraining Accuracy:'.format(vAccuracy))
-            if i < iterations:
-                session.run(train, feed_dict={x: X_train, y: Y_train})
+    session.run(z)
+    for i in range(0, iterations):
+        if i == 0 or i % 100 == 0:
+            print('After {} iterations:'.format(i))
+            tLoss, taccuracy = session.run((loss, accuracy),
+                                           feed_dict={x: X_train,
+                                                      y: Y_train})
+            print('\tTraining Cost:'.format(tLoss))
+            print('\tTraining Accuracy:'.format(taccuracy))
+            vLoss, vAccuracy = session.run((loss, accuracy),
+                                           feed_dict={x: X_valid,
+                                                      y: Y_valid})
+            print('\tTraining Cost:'.format(vLoss))
+            print('\tTraining Accuracy:'.format(vAccuracy))
+        session.run(train, feed_dict={x: X_train, y: Y_train})
     return saver.save(session, save_path)
