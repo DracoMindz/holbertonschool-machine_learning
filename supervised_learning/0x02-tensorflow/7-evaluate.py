@@ -15,7 +15,7 @@ def evaluate(X, Y, save_path):
     """
 
     with tf.Session() as sess:
-        save = tf.train.import_meta_graph(save_path + ".meta")
+        saver = tf.train.import_meta_graph(save_path+'.meta')
         saver.restore(sess, save_path)
 
         x = tf.get_collection("x")[0]
