@@ -6,7 +6,7 @@ import tensorflow.keras as K
 import numpy as np
 
 
-class Yolo:
+class Yolo():
     """Class constructor"""
     def __init__(self, model_path, classes_path, class_t, nms_t, anchors):
         """
@@ -29,74 +29,114 @@ class Yolo:
         self.anchors = anchors
 
 
-def process_outputs(self, outputs, image_size):
-    """
-    Process Outputs Darknet
-    outputs: list of numpy.ndarray s; contains Darknet predictions from image
-            shape(grid_height, grid_width, anchor_boxes, 4 + 1 + classes)
-        grid_height: height of grid used for output
-        grid_width: width of grid used for output
-        anchor_boxes: num of anchor boxes used
-        4: (t_x, t_y, t_w, t_h)
-        1: box_confidence
-        classes: classes probabilites for all classes
-    image_size: numpy.ndarray containing image’s original size
-        [image_height, image_width]
-    Returns: (boxes, box_confidences, box_class_probs)
-        boxes: list numpy.ndarrays
-               shape(grid_height, grid_width, anchor_boxes, 4)
-               containing the processed boundary boxes for each output
-        box_class_probs: list numpy.ndarrays
-               shape(grid_height, grid_width, anchor_boxes, classes)
-               containing box’s class probabilities for each
-        box_confidences: list of numpy.ndarrays
+    def sigmoid(self, x):
+        """sigmoid function"""
+        return (1/(1 + np.exp(-x)))
+
+
+    def process_outputs(self, outputs, image_size):
+        """
+        Process Outputs Darknet
+        outputs: list of numpy.ndarray s; contains Darknet predictions from image
+                shape(grid_height, grid_width, anchor_boxes, 4 + 1 + classes)
+            grid_height: height of grid used for out
+            grid_width: width of grid used for out
+            anchor_boxes: num of anchor boxes used
+            4: (t_x, t_y, t_w, t_h)
+            1: box_confidence
+            classes: classes probabilites for all classes
+        image_size: numpy.ndarray containing image’s original size
+            [image_height, image_width]
+        Returns: (boxes, box_confidences, box_class_probs)
+            boxes: list numpy.ndarrays
+                shape(grid_height, grid_width, anchor_boxes, 4)
+                containing the processed boundary boxes for each out
+            box_class_probs: list numpy.ndarrays
+                shape(grid_height, grid_width, anchor_boxes, classes)
+                containing box’s class probabilities for each
+            box_confidences: list of numpy.ndarrays
                shape (grid_height, grid_width, anchor_boxes, 1)
-               containing box confidences for each output
-    """
+               containing box confidences for each out
+        """
 
-    boxes = []
-    box_class_probs = []
-    box_confidences = []
+        boxes = []
+        box_class_probs = []
+        box_confidence = []
+        image_h = image_size[0]
+        image_w = image_size[1]
+        input_h = self.model.input.shape[2].value
+        input_w = self.model.input.shape[1].value
 
-    for output in range(len(outputs)):
-        outputs[i].shape = (grid_h, grid_w, anch_boxes, _)
+        for outi in range(len(outputs)):
+            net_outp = outputs[outi]
+            grid_h, grid_w = net_outp.shape[:2]
+            net_box = net_outp[-2]
+            net_class = net_outp.shape[-1] - 5
+            net_outp[..., :2] = self.sigmoid(net_outp[..., :2])
+            net_outp[..., 4:] = self.sigmoid(net_outp[..., 4:])
+            net_bx = net_outp[..., 4:]  # varible easier to use
+            anchors = self.anchors(outi)
 
-        # box_cl, box_c: bounding box parameters, sigmoid
-        box_p = 1 / (1 + np.exp(-(outputs[i][:, :, :, 5:])))
-        box_c = 1 / (1 + np.exp(-(outputs[i][:, :, :, 4:5])))
-        box_class_probs.append(box_p)
-        box_confidences.append(box_c)
+            for r in range(net_outp.shape[0]):  # grid height/row
+                for c in range(net_outp.shape[1]):  # grid width/col
+                    for b in range(net_box):
+                        x, y, w, h, = net_outp[r][c][b][:4]
+                        x = (c + x)
+                        ctr_x = x / grid_w  # center image width
+                        y = (r + y)
+                        ctr_y = y / grid_h  # center image height
+                        w = (anchors[b][0] * np.exp(w))
+                        im_width = w / input_w  # image width
+                        h = (anchors[b][1] * np.exp(h))
+                        im_height = h / input_h  # image height
 
-        # grid boxes
-        xybox = 1 / (1 + np.exp(-(outputs[i][:, :, :, :2])))
-        whbox = np.exp(outputs[i][:, :, :, 2:4])
-        reshapes = self.anchors.reshape(1, 1, self.anchors.shape[0],
-                                        anch_boxes, 2)
-        whbox *= reshapes[:, :, i, :, :]
+                        # define scale
+                        x_Box = (ctr_x - im_width/2) * image_w
+                        y_Box = (ctr_y - im_height/2) * image_h
+                        x_2Box = (ctr_x + im_width/2) * image_w
+                        y_2Box = (ctr_x + im_width/2) * image_h
 
-        # grid image tile arange reshape
-        imcol = np.tile(np.arange(0, grid_w),
-                        grid_h).reshape(grid_h, grid_w)
-        imrow = np.tile(np.arange(0, grid_h),
-                        grid_w).reshape(grid_w, grid_h).T
-        row = imrow.reshape(grid_h, grid_w, 1, 1).repeat(3, axis=2)
-        col = imcol.reshape(grid_h, grid_w, 1, 1).repeat(3, axis=2)
-        imgrid = np.conatenate((col, row), axis=3)
+                        # can use BoundBox from plantar library
+                        # ex. box = plantar.BoundBox(x_Box, y_Box, x_2Box, y_2Box)
+                        net_bx[r, c, b, 0:4] = x_Box, y_Box, x_2Box, y_2Box
+                        boxes.append(net_bx)  # boxes contain scale
 
-        # build boxes
-        xybox = ((xybox + grid) / (grid_w, grid_h))
-        model_inputy = self.model.input.shape[2].value
-        model_inputx = self.model.input.shape[1].value
+            # output confidences
+            # box_conf = [self.sigmoid(net_outp[..., 4:5])]
+            box_conf = net_outp[..., 4:5]
+            box_confidence.append(box_conf)
 
-        whbox = (whbox / (model_inputx, model_inputy))
-        xybox -= (whbox / 2)
-        xybox2 = xybox + whbox
-        box = np.concatenate((xybox, xybox2), axis=-1)
+            # output probabilities
+            # box_class_p = [self.sigmoid(net_outp[..., 5:])]
+            box_class_p = net_outp[..., 5:]
+            box_class_probs.append(box_class_p)
 
-        box[..., 0] *= image_size[1]
-        box[..., 2] *= image_size[1]
-        box[..., 1] *= image_size[0]
-        box[..., 3] *= image_size[0]
-        boxes.append(box)
+        return (boxes, box_confidences, box_class_probs)
 
-        return ((boxes, box_confidences, box_class_probs))
+
+    def filter_boxes(self, boxes, box_confidences, box_class_probs):
+        """
+        boxes: numpy.ndarray Shape(grid_height, grid_width, anchor_boxes, 4)
+        box_confidences: numpy.ndarray
+                        shape(grid_Height, grid_wisth, anchor_boxes, 1)
+        box_class_probs: numpy.ndarray
+                        shape(grid_height, grid_width, acnchor_boxes, classes)
+        box_classes: numpy.ndarray shape (?,)
+        box_scores: numpy.ndarray of shape (?) scores for  filtered_boxes
+        Returns: tuple; (filtered_boxes, box_classes, box_scores)
+                filtered_boxes: numpy.ndarray(?, 4) filtered bounding boxes
+        """
+        scores = []
+        for box_conf, box_class in zip(box_confidences, box_class_probs):
+            scores.append(box_conf * box_class)
+
+        # find maximum box score for each section
+        box_sc = scores
+        box_class_pr = K.argmax(box_sc, axis=-1)
+        box_class_sc = K.max(box_sc, axis=-1)
+        mask = np.where(box_sc >= self.class_t)
+        box_scores = tensorflow.boolean_mask(box_class_sc, mask)
+        filtered_boxes = tensorflow.boolean_mask(box_sc, mask)
+        box_classes = tensorflow.boolean_mask(box_cl, mask)
+
+        return filtered_boxes, box_classes, box_scores
