@@ -102,11 +102,13 @@ def process_outputs(self, outputs, image_size):
                     boxes.append(net_bx)  # boxes contain scale
 
         # output confidences
-        box_conf = [self.sigmoid(net_outp[..., 4:5])]
+        # box_conf = [self.sigmoid(net_outp[..., 4:5])]
+        box_conf = net_outp[..., 4:5]
         box_confidence.append(box_conf)
 
         # output probabilities
-        box_class_p = [self.sigmoid(net_outp[..., 5:])]
+        # box_class_p = [self.sigmoid(net_outp[..., 5:])]
+        box_class_p = net_outp[..., 5:]
         box_class_probs.append(box_class_p)
 
     return (boxes, box_confidence, box_class_probs)
