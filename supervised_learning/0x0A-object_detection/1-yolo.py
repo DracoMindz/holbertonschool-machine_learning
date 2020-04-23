@@ -74,7 +74,7 @@ def process_outputs(self, outputs, image_size):
         net_class = net_outp.shape[-1] - 5
         net_outp[..., :2] = self.sigmoid(net_outp[..., :2])
         net_outp[..., 4:] = self.sigmoid(net_outp[..., 4:])
-        net_box = net_outp[..., 4:]  # varible easier to use
+        net_bx = net_outp[..., 4:]  # varible easier to use
         anchors = self.anchors(outi)
 
         for r in range(net_outp.shape[0]):  # grid height/row
@@ -98,15 +98,15 @@ def process_outputs(self, outputs, image_size):
 
                     # can use BoundBox from plantar library
                     # ex. box = plantar.BoundBox(x_Box, y_Box, x_2Box, y_2Box)
-                    net_box[r, c, b, 0:4] = x_Box, y_Box, x_2Box, y_2Box
-                    boxes.append(net_box)  # boxes contain scale
+                    net_bx[r, c, b, 0:4] = x_Box, y_Box, x_2Box, y_2Box
+                    boxes.append(net_bx)  # boxes contain scale
 
         # output confidences
-        box_confidence = net_outp[..., 4:5]
+        box_confidence = [self.sigmoid(net_outp[..., 4:5])]
         box_confidences.append(box_confidence)
 
         # output probabilities
-        box_class_p = net_outp[..., 5:]
+        box_class_p = [self.sigmoid(net_outp[..., 5:])]
         box_class_probs.append(box_class_p)
 
     return (boxes, box_confidences, box_class_probs)
