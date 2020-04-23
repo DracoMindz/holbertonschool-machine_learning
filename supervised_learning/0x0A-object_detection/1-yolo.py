@@ -28,16 +28,15 @@ class Yolo():
         self.nms_t = nms_t
         self.anchors = anchors
 
-
     def sigmoid(self, x):
         """sigmoid function"""
         return (1/(1 + np.exp(-x)))
 
-
     def process_outputs(self, outputs, image_size):
         """
         Process Outputs Darknet
-        outputs: list of numpy.ndarray s; contains Darknet predictions from image
+        outputs: list of numpy.ndarray s;
+                contains Darknet predictions from image
                 shape(grid_height, grid_width, anchor_boxes, 4 + 1 + classes)
             grid_height: height of grid used for out
             grid_width: width of grid used for out
@@ -61,7 +60,7 @@ class Yolo():
 
         boxes = []
         box_class_probs = []
-        box_confidence = []
+        box_confidences = []
         image_h = image_size[0]
         image_w = image_size[1]
         input_h = self.model.input.shape[2].value
@@ -70,12 +69,12 @@ class Yolo():
         for outi in range(len(outputs)):
             net_outp = outputs[outi]
             grid_h, grid_w = net_outp.shape[:2]
-            net_box = net_outp[-2]
+            net_box = net_outp.shape[-2]
             net_class = net_outp.shape[-1] - 5
+            anchors = self.anchors[outi]
             net_outp[..., :2] = self.sigmoid(net_outp[..., :2])
             net_outp[..., 4:] = self.sigmoid(net_outp[..., 4:])
             net_bx = net_outp[..., 4:]  # varible easier to use
-            anchors = self.anchors(outi)
 
             for r in range(net_outp.shape[0]):  # grid height/row
                 for c in range(net_outp.shape[1]):  # grid width/col
@@ -97,14 +96,14 @@ class Yolo():
                         y_2Box = (ctr_x + im_width/2) * image_h
 
                         # can use BoundBox from plantar library
-                        # ex. box = plantar.BoundBox(x_Box, y_Box, x_2Box, y_2Box)
+                        # ex. box = plantar.BoundBox(...)
                         net_bx[r, c, b, 0:4] = x_Box, y_Box, x_2Box, y_2Box
                         boxes.append(net_bx)  # boxes contain scale
 
             # output confidences
             # box_conf = [self.sigmoid(net_outp[..., 4:5])]
             box_conf = net_outp[..., 4:5]
-            box_confidence.append(box_conf)
+            box_confidences.append(box_conf)
 
             # output probabilities
             # box_class_p = [self.sigmoid(net_outp[..., 5:])]

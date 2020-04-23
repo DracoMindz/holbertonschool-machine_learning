@@ -28,23 +28,22 @@ class Yolo():
         self.nms_t = nms_t
         self.anchors = anchors
 
-
     def sigmoid(self, x):
         """sigmoid function"""
         return (1/(1 + np.exp(-x)))
 
-
     def process_outputs(self, outputs, image_size):
         """
         Process Outputs Darknet
-        outputs: list of numpy.ndarray s; contains Darknet predictions from image
+        outputs: list of numpy.ndarray s;
+                contains Darknet predictions from image
                 shape(grid_height, grid_width, anchor_boxes, 4 + 1 + classes)
             grid_height: height of grid used for out
             grid_width: width of grid used for out
             anchor_boxes: num of anchor boxes used
             4: (t_x, t_y, t_w, t_h)
             1: box_confidence
-            classes: classes probabilites for all classes
+        classes: classes probabilites for all classes
         image_size: numpy.ndarray containing image’s original size
             [image_height, image_width]
         Returns: (boxes, box_confidences, box_class_probs)
@@ -55,13 +54,13 @@ class Yolo():
                 shape(grid_height, grid_width, anchor_boxes, classes)
                 containing box’s class probabilities for each
             box_confidences: list of numpy.ndarrays
-               shape (grid_height, grid_width, anchor_boxes, 1)
-               containing box confidences for each out
+                shape (grid_height, grid_width, anchor_boxes, 1)
+                 containing box confidences for each out
         """
 
         boxes = []
         box_class_probs = []
-        box_confidence = []
+        box_confidences = []
         image_h = image_size[0]
         image_w = image_size[1]
         input_h = self.model.input.shape[2].value
@@ -70,12 +69,12 @@ class Yolo():
         for outi in range(len(outputs)):
             net_outp = outputs[outi]
             grid_h, grid_w = net_outp.shape[:2]
-            net_box = net_outp[-2]
+            net_box = net_outp.shape[-2]
             net_class = net_outp.shape[-1] - 5
+            anchors = self.anchors[outi]
             net_outp[..., :2] = self.sigmoid(net_outp[..., :2])
             net_outp[..., 4:] = self.sigmoid(net_outp[..., 4:])
             net_bx = net_outp[..., 4:]  # varible easier to use
-            anchors = self.anchors(outi)
 
             for r in range(net_outp.shape[0]):  # grid height/row
                 for c in range(net_outp.shape[1]):  # grid width/col
@@ -97,14 +96,14 @@ class Yolo():
                         y_2Box = (ctr_x + im_width/2) * image_h
 
                         # can use BoundBox from plantar library
-                        # ex. box = plantar.BoundBox(x_Box, y_Box, x_2Box, y_2Box)
+                        # ex. box = plantar.BoundBox(...)
                         net_bx[r, c, b, 0:4] = x_Box, y_Box, x_2Box, y_2Box
                         boxes.append(net_bx)  # boxes contain scale
 
             # output confidences
             # box_conf = [self.sigmoid(net_outp[..., 4:5])]
             box_conf = net_outp[..., 4:5]
-            box_confidence.append(box_conf)
+            box_confidences.append(box_conf)
 
             # output probabilities
             # box_class_p = [self.sigmoid(net_outp[..., 5:])]
@@ -112,7 +111,6 @@ class Yolo():
             box_class_probs.append(box_class_p)
 
         return (boxes, box_confidences, box_class_probs)
-
 
     def filter_boxes(self, boxes, box_confidences, box_class_probs):
         """
@@ -127,16 +125,36 @@ class Yolo():
                 filtered_boxes: numpy.ndarray(?, 4) filtered bounding boxes
         """
         scores = []
+        filtered_boxes = []
+        box_classes = []
+        box_scores = []
         for box_conf, box_class in zip(box_confidences, box_class_probs):
             scores.append(box_conf * box_class)
 
-        # find maximum box score for each section
-        box_sc = scores
-        box_class_pr = K.argmax(box_sc, axis=-1)
-        box_class_sc = K.max(box_sc, axis=-1)
-        mask = np.where(box_sc >= self.class_t)
-        box_scores = tensorflow.boolean_mask(box_class_sc, mask)
-        filtered_boxes = tensorflow.boolean_mask(box_sc, mask)
-        box_classes = tensorflow.boolean_mask(box_cl, mask)
+        for num in scores:
+            # find highest box score for each section
+            boxScore = num.max(axis=-1)
+            boxScore = boxScore.flatten()
+            box_classes.append(boxScore)
+
+            # find index of highest numbers
+            boxClassScore = np.argmax(scores, axis=-1)
+            boxClassScore = boxClassScore.flatten()
+            box_classes.append(boxClassScore)
+
+            # include the axis=-1
+            box_classes = np.concatenate(box_classes, axis=-1)
+            box_scores = np.concatenate(box_scores, axis=-1)
+
+            # creating the filtered bounding boxes
+            for numBox in boxes:
+                filtered_boxes.append(numBox.reshape(-1, 4))
+            filtered_boxes = np.concatenate(filtered_boxes, axis=0)
+
+            mask = (box_scores >= self.class_t)
+
+            filtered_boxes = tensorflow.boolean_mask(filtered_boxes, mask)
+            box_classes = tensorflow.boolean_mask(box_classes, mask)
+            box_scores = tensorflow.boolean_mask(box_scores, mask)
 
         return filtered_boxes, box_classes, box_scores
