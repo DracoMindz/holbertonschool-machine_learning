@@ -34,8 +34,8 @@ def process_outputs(self, outputs, image_size):
     Process Outputs Darknet
     outputs: list of numpy.ndarray s; contains Darknet predictions from image
             shape(grid_height, grid_width, anchor_boxes, 4 + 1 + classes)
-        grid_height: height of grid used for output
-        grid_width: width of grid used for output
+        grid_height: height of grid used for out
+        grid_width: width of grid used for out
         anchor_boxes: num of anchor boxes used
         4: (t_x, t_y, t_w, t_h)
         1: box_confidence
@@ -45,34 +45,37 @@ def process_outputs(self, outputs, image_size):
     Returns: (boxes, box_confidences, box_class_probs)
         boxes: list numpy.ndarrays
                shape(grid_height, grid_width, anchor_boxes, 4)
-               containing the processed boundary boxes for each output
+               containing the processed boundary boxes for each out
         box_class_probs: list numpy.ndarrays
                shape(grid_height, grid_width, anchor_boxes, classes)
                containing box’s class probabilities for each
         box_confidences: list of numpy.ndarrays
                shape (grid_height, grid_width, anchor_boxes, 1)
-               containing box confidences for each output
+               containing box confidences for each out
     """
 
     boxes = []
     box_class_probs = []
     box_confidences = []
 
-    for output in range(len(outputs)):
-        grid_h, grid_w, anch_boxes, _ = outputs[output].shape
+    for out in range(len(outputs)):
+        grid_h = outputs[out].shape[0]
+        grid_w = outputs[out].shape[1]
+        anchor_boxes = outputs[out].shape[2]
+        _ = outputs[out].shape[3]
 
         # box_p, box_c: bounding box parameters, sigmoid
-        box_c = 1 / (1 + np.exp(-(outputs[output][:, :, :, 4:5])))
+        box_c = 1 / (1 + np.exp(-(outputs[out][:, :, :, 4:5])))
         box_confidences.append(box_c)
-        box_p = 1 / (1 + np.exp(-(outputs[output][:, :, :, 5:])))
+        box_p = 1 / (1 + np.exp(-(outputs[out][:, :, :, 5:])))
         box_class_probs.append(box_p)
 
         # grid boxes
-        xybox = 1 / (1 + np.exp(-(outputs[output][:, :, :, :2])))
-        whbox = np.exp(outputs[output][:, :, :, 2:4])
-        a_tensor = self.anchors.reshape(1, 1, self.anchors.shape[0],
-                                        anch_boxes, 2)
-        whbox = whbox * a_tensor[:, :, output, :, :]
+        xybox = 1 / (1 + np.exp(-(outputs[out][:, :, :, :2])))
+        whbox = np.exp(outputs[out][:, :, :, 2:4])
+        anchor_tensor = self.anchors.reshape(1, 1, self.anchors.shape[0],
+                                             anchor_boxes, 2)
+        whbox = whbox * anchor_tensor[:, :, out, :, :]
 
         # grid image tile arange reshape
         imcol = np.tile(np.arange(0, grid_w),
