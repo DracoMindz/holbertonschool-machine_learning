@@ -98,8 +98,8 @@ def process_outputs(self, outputs, image_size):
 
                     # can use BoundBox from plantar library
                     # ex. box = plantar.BoundBox(x_Box, y_Box, x_2Box, y_2Box)
-                    box[r, c, b, 0:4] = x_Box, y_Box, x_2Box, y_2Box
-                    boxes.append(box)  # boxes contain scale
+                    net_box[r, c, b, 0:4] = x_Box, y_Box, x_2Box, y_2Box
+                    boxes.append(net_box)  # boxes contain scale
 
         # output confidences
         box_confidence = net_outp[..., 4:5]
