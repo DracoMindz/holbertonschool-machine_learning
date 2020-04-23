@@ -29,6 +29,11 @@ class Yolo():
         self.anchors = anchors
 
 
+def sigmoid(self, x):
+    """sigmoid function"""
+    return (1/(1 + np.exp(-x)))
+
+
 def process_outputs(self, outputs, image_size):
     """
     Process Outputs Darknet
@@ -57,50 +62,51 @@ def process_outputs(self, outputs, image_size):
     boxes = []
     box_class_probs = []
     box_confidences = []
+    image_h = image_size[0]
+    image_w = image_size[1]
+    input_h = self.model.input.shape[2].value
+    input_w = self.model.input.shape[1].value
 
-    for out in range(len(outputs)):
-        grid_h = outputs[out].shape[0]
-        grid_w = outputs[out].shape[1]
-        anchor_boxes = outputs[out].shape[2]
-        _ = outputs[out].shape[3]
+    for outi in range(len(outputs)):
+        net_outp = outputs[outi]
+        grid_h, grid_w = net_outp.shape[:2]
+        net_box = net_outp[-2]
+        net_class = net_outp.shape[-1] - 5
+        net_outp[..., :2] = self.sigmoid(net_outp[..., :2])
+        net_outp[..., 4:] = self.sigmoid(net_outp[..., 4:])
+        net_box = net_outp[..., 4:]  # varible easier to use
+        anchors = self.anchors(outi)
 
-        # box_p, box_c: bounding box parameters, sigmoid
-        box_c = 1 / (1 + np.exp(-(outputs[out][:, :, :, 4:5])))
-        box_confidences.append(box_c)
-        box_p = 1 / (1 + np.exp(-(outputs[out][:, :, :, 5:])))
-        box_class_probs.append(box_p)
+        for r in range(net_outp.shape[0]):  # grid height/row
+            for c in range(net_outp.shape[1]):  # grid width/col
+                for b in range(net_box):
+                    x, y, w, h, = net_outp[r][c][b][:4]
+                    x = (c + x)
+                    ctr_x = x / grid_w  # center image width
+                    y = (r + y)
+                    ctr_y = y / grid_h  # center image height
+                    w = (anchors[b][0] * np.exp(w))
+                    im_width = w / input_w  # image width
+                    h = (anchors[b][1] * np.exp(h))
+                    im_height = h / input_h  # image height
 
-        # grid boxes
-        xybox = 1 / (1 + np.exp(-(outputs[out][:, :, :, :2])))
-        whbox = np.exp(outputs[out][:, :, :, 2:4])
-        anchor_tensor = self.anchors.reshape(1, 1, self.anchors.shape[0],
-                                             anchor_boxes, 2)
-        whbox = whbox * anchor_tensor[:, :, out, :, :]
+                    # define scale
+                    x_Box = (ctr_x - im_width/2) * image_w
+                    y_Box = (ctr_y - im_height/2) * image_h
+                    x_2Box = (ctr_x + im_width/2) * image_w
+                    y_2Box = (ctr_x + im_width/2) * image_h
 
-        # grid image tile arange reshape
-        imcol = np.tile(np.arange(0, grid_w),
-                        grid_h).reshape(grid_h, grid_w)
-        imrow = np.tile(np.arange(0, grid_h),
-                        grid_w).reshape(grid_w, grid_h).T
-        row = imrow.reshape(grid_h, grid_w, 1, 1).repeat(3, axis=2)
-        col = imcol.reshape(grid_h, grid_w, 1, 1).repeat(3, axis=2)
-        imgrid = np.concatenate((col, row), axis=3)
+                    # can use BoundBox from plantar library
+                    # ex. box = plantar.BoundBox(x_Box, y_Box, x_2Box, y_2Box)
+                    box[r, c, b, 0:4] = x_Box, y_Box, x_2Box, y_2Box
+                    boxes.append(box)  # boxes contain scale
 
-        # build boxes
-        xybox = (xybox + imgrid)
-        xybox /= (grid_w, grid_h)
-        model_inputH = self.model.input.shape[2].value
-        model_inputW = self.model.input.shape[1].value
+        # output confidences
+        box_confidence = net_outp[..., 4:5]
+        box_confidences.append(box_confidence)
 
-        whbox = (whbox / (model_inputW, model_inputH))
-        xybox -= (whbox / 2)
-        xybox2 = xybox + whbox
-        box = np.concatenate((xybox, xybox2), axis=-1)
-
-        box[..., 0] *= image_size[1]
-        box[..., 2] *= image_size[1]
-        box[..., 1] *= image_size[0]
-        box[..., 3] *= image_size[0]
-        boxes.append(box)
+        # output probabilities
+        box_class_p = net_outp[..., 5:]
+        box_class_probs.append(box_class_p)
 
     return (boxes, box_confidences, box_class_probs)
