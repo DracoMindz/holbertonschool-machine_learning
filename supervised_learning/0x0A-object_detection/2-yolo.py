@@ -151,10 +151,10 @@ class Yolo():
                 filtered_boxes.append(numBox.reshape(-1, 4))
             filtered_boxes = np.concatenate(filtered_boxes, axis=0)
 
-            mask = (box_scores >= self.class_t)
+            mask = np.where(box_scores >= self.class_t)
 
-            filtered_boxes = tensorflow.boolean_mask(filtered_boxes, mask)
-            box_classes = tensorflow.boolean_mask(box_classes, mask)
-            box_scores = tensorflow.boolean_mask(box_scores, mask)
+            filtered_boxes = filtered_boxes[mask]
+            box_classes = box_classes[mask]
+            box_scores = box_scores[mask]
 
         return filtered_boxes, box_classes, box_scores
