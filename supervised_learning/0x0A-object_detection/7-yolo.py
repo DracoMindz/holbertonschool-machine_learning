@@ -275,3 +275,7 @@ class Yolo():
         im_shape = [m.shape[:2] for m in images]  # apply shape to images
         image_shapes = np.stack(im_shape, axis=0)
         return (pimages, image_shapes)
+
+    def show_boxes(self, image, boxes, box_classes, box_scores, file_name):
+
+    def predict(self, folder_path):

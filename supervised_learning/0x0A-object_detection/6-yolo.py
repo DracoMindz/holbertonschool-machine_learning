@@ -277,4 +277,3 @@ class Yolo():
         return (pimages, image_shapes)
 
     def show_boxes(self, image, boxes, box_classes, box_scores, file_name):
-        
