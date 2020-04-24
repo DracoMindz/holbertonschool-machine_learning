@@ -6,6 +6,7 @@ import tensorflow.keras as K
 import numpy as np
 import cv2
 import glob
+import os
 
 
 class Yolo():
@@ -163,7 +164,7 @@ class Yolo():
 
     def non_max_suppression(self, filtered_boxes, box_classes, box_scores):
         """
-        Function performs non-max suppression on boundary noxes
+        Function performs non-max suppression on boundary boxes
         filtered_boxes: numpy.ndaray shape (?,4)
         box_classes: numpy.ndarray shape(?, )
                     containg all of the filtered_boxes
@@ -187,12 +188,12 @@ class Yolo():
         predicted_box_scores = []
 
         for boxClass in set(box_classes):
-            idx = np.where(box_classes == boxClass)  # where they are the same
+            i = np.where(box_classes == boxClass)  # where they are the same
 
             # function arrays
-            fb_i = filtered_boxes[idx]
-            bc_i = box_classes[idx]
-            bS_i = box_scores[idx]
+            fb_i = filtered_boxes[i]
+            bc_i = box_classes[i]
+            bS_i = box_scores[i]
 
             # coordinates of the bounding boxes
             x1 = fb_i[:, 0]
@@ -205,11 +206,11 @@ class Yolo():
             sort_order = bS_i.argsort()[::-1]
 
             # loop remaining indexes
-            pkd_idxs = []  # to hold list of picked indexes
+            pkd_is = []  # to hold list of picked indexes
             while len(sort_order) > 0:
                 i_pos = sort_order[0]
                 l_pos = sort_order[1:]
-                pkd_idxs.append(i_pos)
+                pkd_is.append(i_pos)
 
             # find the coordinates of intersection
                 xx1 = np.maximum(x1[i_pos], x1[l_pos])
@@ -230,7 +231,7 @@ class Yolo():
             below_Thresh = np.where(iou <= self.nms_t)[0]
             sort_order = sort_order[below_Thresh + 1]
 
-            pkd = np.array(pkd_idxs)  # array of piked indexes
+            pkd = np.array(pkd_is)  # array of piked indexes
 
             # append picked to function arrays
             box_predictions.append(pkd)
@@ -277,5 +278,80 @@ class Yolo():
         return (pimages, image_shapes)
 
     def show_boxes(self, image, boxes, box_classes, box_scores, file_name):
+        """
+        function displays image with: boundary boxes
+                                      class names
+                                      box scores
+        image: numpy.ndarray containing unprocessed image
+        boxes: numpy.ndarray containing boundary boxes for image
+        box_classes: numpy.ndarray containing class indices for each box
+        box_scores: numpy.ndarray containing box scores for each box
+        file_name: file path where original image stored
+        """
+        orig_image = image
+        for i, box in enumerate(boxes):
+            # bounding boxes
+            start_x = int(box[0])
+            start_y = int(box[1])
+            end_x = int(box[2])
+            end_y = int(box[3])
+
+            # color items
+            textColor = (0, 0, 255)
+            lineColor = (255, 0, 0)
+
+            # box charateristics
+            orig_image = cv2.rectangle(orig_image,
+                                       (start_x, start_y), (end_x, end_y),
+                                       lineColor, thickness=2)
+            # text chracteristics
+            orig_image = cv2.putText(orig_image,
+                                     self.class_names[box_classes[i]]
+                                     + " " + "{:.2f}".format(box_scores[i]),
+                                     (start_x, (end_y) - 5),
+                                     cv2.FONT_HERSHEY_SIMPLEX,
+                                     0.5, textColor,
+                                     thickness=1,
+                                     lineType=cv2.LINE_AA,
+                                     bottomLeftOrigin=False)
+            cv2.imshow(file_name, image)
+            key = cv2.waitKey(0)
+            if key == ('s'):
+                if not os.path.exists('detections'):
+                    os.makedirs('detections')
+                os.chdir('detections')
+                cv2.imwrite(file_name, image)
+                os.chdir('../')
+            cv2.destroyAllWindows()
 
     def predict(self, folder_path):
+        """
+        function creates prediction for each image
+        folder_path: string reps path of folder containing images to predict
+        use: show_box method
+        Returns: tuple:
+                        predictions: list of tuples for each image of
+                                    (boxes, box_classes, box_scores)
+                        image_paths: list image paths for each
+                                    coresponding prediction in predictions
+        """
+        images, image_paths = Yolo.load_images(folder_path)
+        pimages, image_shapes = self.preprocess_images(images)
+        outputs = self.model.predict(pimages)
+        predictions = []
+        for i in range(pimages.shape[0]):
+            for out_i in outputs:
+                bxes, box_conf, box_cl_probs = (self.process_outputs(out_i[i],
+                                                image_shapes[i]))
+                filtr_bxes, bx_class, bx_scores = (self.filter_boxes(bxes,
+                                                   box_conf, box_cl_probs))
+                pred_bxs, pred_bcl, pred_bsc = (self.
+                                                non_max_suppression(filtr_bxes,
+                                                                    bx_class,
+                                                                    bx_scores))
+
+        predictions.append((pred_bxs, pred_bcl, pred_bsc))
+        file_name = image_paths[i].split("/")[-1]
+        self.show_boxes(images[i], pred_bxs, pred_bcl, pred_bsc, file_name)
+
+        return (predictions, image_paths)

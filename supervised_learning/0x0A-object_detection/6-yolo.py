@@ -6,6 +6,7 @@ import tensorflow.keras as K
 import numpy as np
 import cv2
 import glob
+import os
 
 
 class Yolo():
@@ -163,7 +164,7 @@ class Yolo():
 
     def non_max_suppression(self, filtered_boxes, box_classes, box_scores):
         """
-        Function performs non-max suppression on boundary noxes
+        Function performs non-max suppression on boundary boxes
         filtered_boxes: numpy.ndaray shape (?,4)
         box_classes: numpy.ndarray shape(?, )
                     containg all of the filtered_boxes
@@ -277,3 +278,48 @@ class Yolo():
         return (pimages, image_shapes)
 
     def show_boxes(self, image, boxes, box_classes, box_scores, file_name):
+        """
+        function displays image with: boundary boxes
+                                      class names
+                                      box scores
+        image: numpy.ndarray containing unprocessed image
+        boxes: numpy.ndarray containing boundary boxes for image
+        box_classes: numpy.ndarray containing class indices for each box
+        box_scores: numpy.ndarray containing box scores for each box
+        file_name: file path where original image stored
+        """
+        orig_image = image
+        for idx, box in enumerate(boxes):
+            # bounding boxes
+            start_x = int(box[0])
+            start_y = int(box[1])
+            end_x = int(box[2])
+            end_y = int(box[3])
+
+            # color items
+            textColor = (0, 0, 255)
+            lineColor = (255, 0, 0)
+
+            # box charateristics
+            orig_image = cv2.rectangle(orig_image,
+                                       (start_x, start_y), (end_x, end_y),
+                                       lineColor, thickness=2)
+            # text chracteristics
+            orig_image = cv2.putText(orig_image,
+                                     self.class_names[box_classes[idx]]
+                                     + " " + "{:.2f}".format(box_scores[idx]),
+                                     (start_x, (end_y) - 5),
+                                     cv2.FONT_HERSHEY_SIMPLEX,
+                                     0.5, textColor,
+                                     thickness=1,
+                                     lineType=cv2.LINE_AA,
+                                     bottomLeftOrigin=False)
+            cv2.imshow(file_name, image)
+            key = cv2.waitKey(0)
+            if key == ('s'):
+                if not os.path.exists('detections'):
+                    os.makedirs('detections')
+                os.chdir('detections')
+                cv2.imwrite(file_name, image)
+                os.chdir('../')
+            cv2.destroyAllWindows()
