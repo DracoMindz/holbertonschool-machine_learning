@@ -33,7 +33,7 @@ class Yolo():
 
     def sigmoid(self, x):
         """sigmoid function"""
-        return (1/(1 + np.exp(-x)))
+        return (1 / (1 + np.exp(-x)))
 
     def process_outputs(self, outputs, image_size):
         """
