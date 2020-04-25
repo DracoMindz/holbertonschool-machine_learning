@@ -63,8 +63,8 @@ class Yolo():
         box_confidences = []
         image_h = image_size[0]
         image_w = image_size[1]
-        input_h = self.model.input.shape[2].value
-        input_w = self.model.input.shape[1].value
+        input_h = self.model.input.shape[1].value
+        input_w = self.model.input.shape[2].value
 
         for outi in range(len(outputs)):
             net_outp = outputs[outi]
@@ -74,26 +74,28 @@ class Yolo():
             anchors = self.anchors[outi]
             net_outp[..., :2] = self.sigmoid(net_outp[..., :2])
             net_outp[..., 4:] = self.sigmoid(net_outp[..., 4:])
-            net_bx = net_outp[..., 4:]  # varible easier to use
+            net_bx = net_outp[..., :4]  # varible easier to use
 
-            for r in range(net_outp.shape[0]):  # grid height/row
-                for c in range(net_outp.shape[1]):  # grid width/col
+            for r in range(grid_h):
+                for c in range(grid_w):
                     for b in range(net_box):
                         x, y, w, h, = net_outp[r][c][b][:4]
+                        # center image height and width
                         x = (c + x)
-                        ctr_x = x / grid_w  # center image width
+                        ctr_x = x / grid_w
                         y = (r + y)
-                        ctr_y = y / grid_h  # center image height
+                        ctr_y = y / grid_h
+                        # image height and width
                         w = (anchors[b][0] * np.exp(w))
-                        im_width = w / input_w  # image width
+                        im_width = w / input_w
                         h = (anchors[b][1] * np.exp(h))
-                        im_height = h / input_h  # image height
+                        im_height = h / input_h
 
                         # define scale
                         x_Box = (ctr_x - im_width/2) * image_w
                         y_Box = (ctr_y - im_height/2) * image_h
                         x_2Box = (ctr_x + im_width/2) * image_w
-                        y_2Box = (ctr_x + im_width/2) * image_h
+                        y_2Box = (ctr_y + im_width/2) * image_h
 
                         # can use BoundBox from plantar library
                         # ex. box = plantar.BoundBox(...)
