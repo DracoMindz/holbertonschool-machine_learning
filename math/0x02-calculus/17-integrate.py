@@ -13,7 +13,8 @@ def poly_integral(poly, C=0):
             return None
     except TypeError:
         return None
-    """code checking if C is int"""
+
+    # code checking if C is int
     if not (type(C) is int or type(C) is float):
         return None
     coIndex = 0
@@ -29,7 +30,7 @@ def poly_integral(poly, C=0):
     # dePoly = ([C] + [i_pow])
     dePoly = [C] + [coef_whole(coef / (exp + 1))
                     for exp, coef in enumerate(poly)]
-    #print("{}".format(dePoly))
+    # print("{}".format(dePoly))
     return dePoly[:coIndex + 1]
 
 
