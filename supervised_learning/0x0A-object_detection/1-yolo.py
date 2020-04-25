@@ -74,12 +74,12 @@ class Yolo():
             anchors = self.anchors[outi]
             net_outp[..., :2] = self.sigmoid(net_outp[..., :2])
             net_outp[..., 4:] = self.sigmoid(net_outp[..., 4:])
-            net_bx = net_outp[..., :4]  # varible easier to use
+            net_bx = net_outp[..., 0:4]  # varible easier to use
 
             for r in range(grid_h):
                 for c in range(grid_w):
                     for b in range(net_box):
-                        x, y, w, h, = net_outp[r][c][b][:4]
+                        y, x, w, h, = net_bx[r, c, b, :4]
                         # center image height and width
                         x = (c + x)
                         ctr_x = x / grid_w
@@ -99,13 +99,13 @@ class Yolo():
 
                         # can use BoundBox from plantar library
                         # ex. box = plantar.BoundBox(...)
-                        net_bx[r, c, b, 0:4] = x_Box, y_Box, x_2Box, y_2Box
+                        net_bx[r, c, b, 0:4] = y_Box, x_Box, y_2Box, x_2Box
                         boxes.append(net_bx)  # boxes contain scale
 
             # output confidences
-            # box_conf = [self.sigmoid(net_outp[..., 4:5])]
+            box_conf = [self.sigmoid(net_outp[..., 4:5])]
             box_conf = net_outp[..., 4:5]
-            box_confidences.append(box_conf)
+            # box_confidences.append(box_conf)
 
             # output probabilities
             # box_class_p = [self.sigmoid(net_outp[..., 5:])]
