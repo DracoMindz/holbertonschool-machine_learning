@@ -74,7 +74,7 @@ class Yolo():
             anchors = self.anchors[outi]
             net_outp[..., :2] = self.sigmoid(net_outp[..., :2])
             net_outp[..., 4:] = self.sigmoid(net_outp[..., 4:])
-            net_bx = net_outp[..., 0:4]  # varible easier to use
+            net_bx = net_outp[..., :4]  # varible easier to use
 
             for r in range(grid_h):
                 for c in range(grid_w):
@@ -103,9 +103,9 @@ class Yolo():
                         boxes.append(net_bx)  # boxes contain scale
 
             # output confidences
-            box_conf = [self.sigmoid(net_outp[..., 4:5])]
+            # box_conf = [self.sigmoid(net_outp[..., 4:5])]
             box_conf = net_outp[..., 4:5]
-            # box_confidences.append(box_conf)
+            box_confidences.append(box_conf)
 
             # output probabilities
             # box_class_p = [self.sigmoid(net_outp[..., 5:])]
