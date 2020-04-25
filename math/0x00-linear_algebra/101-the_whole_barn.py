@@ -5,10 +5,15 @@
 def add_matrices(mat1, mat2):
 
     """adds two matrices"""
-    if len(mat1[0]) != len(mat2[0]):
-        return (None)
-    newMat = [[] for i in mat1]
-    for i in range(len(mat1)):
-        for j in range(len(mat1[0])):
-            newMat[i].append(mat1[i][j] + mat2[i][j])
-    return (newMat)
+    try:
+        if len(mat1) != len(mat2):
+            return None
+        newMat = []
+        for i, j in zip(mat1, mat2):
+            newAdd = add_matrices(i, j)
+            if newAdd is None:
+                return None
+            newMat.append(newAdd)
+        return (newMat)
+    except TypeError:
+        return mat1 + mat2
