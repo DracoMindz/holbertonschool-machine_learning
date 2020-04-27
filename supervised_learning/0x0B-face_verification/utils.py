@@ -94,3 +94,39 @@ def save_images(path, images, filenames):
         return True
     else:
         return False
+
+
+def generate_triplets(images, filenames, triplet_names):
+    """
+    function that generates triplets
+    :param images:
+    :param filenames:
+    :param triplet_names:
+    :return: list [A, P, N]
+    A is a numpy.ndarray shape (m, h, w, 3)
+        containing anchor images for  m triplets
+    P is a numpy.ndarray shape (m, h, w, 3)
+        containing positive images for m triplets
+    N is a numpy.ndarray shape (m, h, w, 3)
+        containing negative images for m triplets
+    """
+
+    imagNames = [filenames[m].split('.')[0] for m in range(len(filenames))]
+
+    ancNames = [names[0] for names in triplet_names]
+    posNames = [names[1]for names in triplet_names]
+    negNames = [names[2]for names in triplet_names]
+
+    a_imgName = [m for m in range(len(imagNames)) if imagNames[m] in ancNames]
+    p_imgName = [m for m in range(len(imagNames)) if imagNames[m] in posNames]
+    n_imgName = [m for m in range(len(imagNames)) if imagNames[m] in negNames]
+
+    A = images[a_imgName]
+    P = images[p_imgName]
+    N = images[n_imgName]
+
+    print(A.shape)
+    print(P.shape)
+    print(N.shape)
+
+    return [A, P, N]
