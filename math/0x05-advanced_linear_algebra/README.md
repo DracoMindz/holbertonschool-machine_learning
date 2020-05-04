@@ -1,10 +1,10 @@
-#0x05. Advanced Linear Algebra
+# 0x05. Advanced Linear Algebra
 Specializations - Machine Learning - Math
 
-##Learning Objectives
+## Learning Objectives
 At the end of this project, you are expected to be able to explain to anyone, without the help of Google:
 
-###***General***
+### ***General***
 ```
 What is a determinant? How would you calculate it?
 What is a minor, cofactor, adjugate? How would calculate them?
