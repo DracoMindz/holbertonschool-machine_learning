@@ -22,6 +22,8 @@ def definiteness(matrix):
         return None
     definite = (np.linalg.eigvals(matrix))
 
+    if all(definite == 0):
+        return None
     if all(definite > 0):
         return "Positive definite"
     if all(definite < 0):
