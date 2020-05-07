@@ -30,5 +30,8 @@ def definiteness(matrix):
         return "Positive semi-definite"
     if any(definite < 0) and any(definite == 0):
         return "Negative semi-definite"
-    else:
+    elif not (any(definite < 0)
+              and any(definite == 0) and any(definite > 0)):
         return "Indefinite"
+    else:
+        return "None"
