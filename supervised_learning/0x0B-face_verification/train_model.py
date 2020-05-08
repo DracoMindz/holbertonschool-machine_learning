@@ -56,21 +56,21 @@ class TrainModel():
 
     def train(self, triplets, epochs=5, batch_size=32,
               validation_split=0.3, verbose=True):
-    """
-    create public instance method that trains
-    self.training_model
-    :param: triplets: list containing inputs to self.training_model
-    :param: epochs: num of epochs to train for
-    :param: batch_size: batch size for training
-    :param: validation_split: validation split for training
-    :param: verbose: boolean sets the verbosity mode
-    Returns: History: output from training
-    """
-    history = self.training_mode.fit(
-        triplets, validation_split=validation_split,
-        batch_size=batch_size, epochs=epochs,
-        verbose=verbose)
-    return history
+        """
+        create public instance method that trains
+        self.training_model
+        :param: triplets: list containing inputs to self.training_model
+        :param: epochs: num of epochs to train for
+        :param: batch_size: batch size for training
+        :param: validation_split: validation split for training
+        :param: verbose: boolean sets the verbosity mode
+        Returns: History: output from training
+        """
+        history = self.training_mode.fit(
+            triplets, validation_split=validation_split,
+            batch_size=batch_size, epochs=epochs,
+            verbose=verbose)
+        return history
 
     def save(self, save_path):
         """
@@ -85,10 +85,26 @@ class TrainModel():
     def f1_score(y_true, y_pred):
         """
         static method returns the f1 score
-        :param y_pred:
-        :param y_true:
+        :param y_pred: predictons
+        :param y_true: actual
         :return: f1 score
         """
+        true_positives = K.sum(K.round(K.clip(y_true * y_pred, 0, 1)))
+        possible_positives = K.sum(K.round(K.clip(y_true, 0, 1)))
+        predicted_positives = K.sum(K.round(K.clip(y_pred, 0, 1)))
+        precision = true_positives / (predicted_positives + K.epsilon())
+        recall = true_positives / (possible_positives + K.epsilon())
+        f1_val = 2 * (precision * recall) / (precision + recall + K.epsilon())
+        return f1_val
 
+    @staticmethod
+    def accuracy(y_true, y_pred):
+        """
+        static method returns the accuracy
+        :param y_pred: prediction
+        :param y_tru: actual
+        :return:  accuracy
+        """
 
+        return K.metrics.BinaryAccuracy(y_true, y_pred)
 
