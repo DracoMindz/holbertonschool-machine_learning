@@ -14,8 +14,12 @@ def definiteness(matrix):
     Negative definite, or Indefinite
     """
 
+    # check if np.ndarray
     if not isinstance(matrix, np.ndarray):
         raise TypeError("matrix must be a numpy.ndarray")
+    # check if symmetrical
+    if not np.all(np.transpose(matrix) == matrix):
+        return None
     if len(matrix.shape) != 2:
         return None
     if (matrix.shape[0] != matrix.shape[1]):
@@ -37,3 +41,12 @@ def definiteness(matrix):
         return "Indefinite"
     else:
         return "None"
+
+
+def transpose_matrix(matrix):
+    """
+    transpose given matrix
+    :param matrix: list of lists
+    :return: transposed matrix
+    """
+    return [[row[m] for row in matrix] for m in range(len(matrix[0]))]
