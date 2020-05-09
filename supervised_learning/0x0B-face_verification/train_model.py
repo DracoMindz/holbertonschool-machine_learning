@@ -108,3 +108,11 @@ class TrainModel():
 
         return K.metrics.BinaryAccuracy(y_true, y_pred)
 
+    def best_tau(selfself, images, identities, thresholds):
+        """
+        public instance method
+        :param images:
+        :param identities:
+        :param thresholds:
+        :return: (tau, f1, acc)
+        """
