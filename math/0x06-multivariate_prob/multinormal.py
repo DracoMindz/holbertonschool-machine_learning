@@ -51,7 +51,7 @@ class MultiNormal:
         # using det and inv of cov
             m = x - self.mean
             det = np.linalg.det(self.cov)
-            pdf_det = 1. / (np.sqrt((2 * pn.pi)**self.cov.mean[0] * det))
+            pdf_det = 1. / (np.sqrt((2 * pn.pi)**self.cov.shape[0] * det))
             pdf_inv = (np.exp(-np.linalg.solve(self.cov, m).T.dot(m)) / 2)
 
             pdf = pdf_det * pdf_inv
