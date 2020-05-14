@@ -17,17 +17,8 @@ def pca(X, ndim):
                 transformed X
     :return: T
     """
-    (n, d) = X.shape
-    m = mean(X, axis=1)
-    mid_X = X - m
-    cov_X = np.dot(mid_X.T, mid_X) / (n-1)
-
-    # get eigenvalues  and eigenvectors
-    eigVal, eigVec = np.linalg.eig(cov_X)
-    idx = np.argsort(eigVal)[::-1]
-    eigVal = eigVal[idx]
-    eigVec = eigVec[:, idx]
-
-    eigVal = eigVal[:ndim]
-    inv_eigVal = (-1) * eigVec[:, :ndim]
-    return float64(np.matmul(mid_X, inv_eigVal))
+    (m, n) = X.shape
+    X = X - np.mean(X, axis=0)
+    _, _, V = np.linalg.svd(X)
+    W = V.T[:, ndim]
+    return np.matmul(X, W)
