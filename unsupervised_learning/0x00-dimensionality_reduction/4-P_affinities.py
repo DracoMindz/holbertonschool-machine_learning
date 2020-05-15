@@ -22,7 +22,7 @@ def P_affinities(X, tol=1e-5, perplexity=30.0):
     n, d = X.shape
     D, P, betas, H = P_init(X, perplexity)
     # logU = np.log(perplexity)
-    sumX = np.sum(np.square(X), 1)
+    # sumX = np.sum(np.square(X), 1)
 
     # loop over data points
     for idx in range(n):
@@ -40,17 +40,17 @@ def P_affinities(X, tol=1e-5, perplexity=30.0):
 
             # adjust precision
             if diffH > 0:
-                betaMin = betas[idx]
+                betaMin = betas[idx, 0]
                 if betaMax is None:
-                    betas[idx] = beta[idx] * 2
+                    betas[idx, 0] = beta[idx, 0] * 2
                 else:
-                    betas[idx] = (betas[idx] + betaMax) / 2
+                    betas[idx, 0] = (betas[idx, 0] + betaMax) / 2
             else:
-                betaMax = betas[idx]
+                betaMax = betas[idx, 0]
                 if betaMin is None:
-                    betas[idx] = betas[idx] / 2
+                    betas[idx] = betas[idx, 0] / 2
                 else:
-                    betas[idx] = (betas[idx] + betaMin) / 2
+                    betas[idx, 0] = (betas[idx, 0] + betaMin) / 2
 
                 (Hi, Pi) = HP(Di, betas[idx])
                 diffH = Hi - H
