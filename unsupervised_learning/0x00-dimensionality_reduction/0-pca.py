@@ -18,20 +18,20 @@ def pca(X, var=0.95):
                 transformed X
     :return: weights matrix; maintains var fraction of X orig variance
     """
-    # compute covariance matrix
-    (n, d) = X.shape
-    sigma = 1.0 / d * np.dot(X, X.T)
 
-    # get eigenvectors and eigenvalues
-    U, s, V = np.linalg.svd(sigma, full_matrices=True)
 
-    # compute r  features and retain varieance
+    # get s and Vt values
+    U, s, Vt = np.linalg.svd(X)
+
+    # calculate cumulative variance
     s_sum = np.sum(s)
-    var_x = np.array([np.sum(s[: i + 1]) / s_sum * 100.0 for i in range(n)])
-    r = len(var_x[var_x < (var * 100)])
+    tot_sum = np.cumsum(s)
 
-    # projected reduced dimensional features
-    W = []
-    red_U = U[:, : r]
-    W = (-1 * red_U)
-    return W
+    # threshold, variance included in s
+     cum_var = tot_sum / s_sum
+
+    # find indices that are non-zero, grouped by element
+    r = np.argwhere(cum_var >= var)[0, 0]
+
+    W = V[:r + 1].T
+    return (W)
