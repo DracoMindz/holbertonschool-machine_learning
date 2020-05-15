@@ -19,7 +19,6 @@ def pca(X, var=0.95):
     :return: weights matrix; maintains var fraction of X orig variance
     """
 
-
     # get s and Vt values
     U, s, Vt = np.linalg.svd(X)
 
@@ -28,10 +27,10 @@ def pca(X, var=0.95):
     tot_sum = np.cumsum(s)
 
     # threshold, variance included in s
-     cum_var = tot_sum / s_sum
+    cum_var = tot_sum / s_sum
 
     # find indices that are non-zero, grouped by element
     r = np.argwhere(cum_var >= var)[0, 0]
 
-    W = V[:r + 1].T
+    W = Vt[:r + 1].T
     return (W)
