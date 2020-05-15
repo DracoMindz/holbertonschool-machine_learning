@@ -22,5 +22,5 @@ def grads(Y, P):
     dY = np.zeros([n, ndim])
     for i in range(n):
         Y_diff = Y[i, :] - Y
-        dY[i, :] = ((np.sum((affDiff_term[i, :] * Y_diff), axis=0))*4)
+        dY[i, :] = (np.sum((affDiff_term[i, :] * Y_diff), axis=0))
     return (dy, Q)
