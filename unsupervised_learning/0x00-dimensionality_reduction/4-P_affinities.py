@@ -54,5 +54,7 @@ def P_affinities(X, tol=1e-5, perplexity=30.0):
                 (Hi, Pi) = HP(Di, betas[idx])
                 diffH = Hi - logU
 
-        P = P[idx, np.concatenate((np.r_[0:idx], np.r[idx + 1: n]))]
+        Pi = P[idx, np.concatenate((np.r_[0:idx], np.r[idx + 1: n]))]
+        P[idx] = Pi
+        P = (P + P.T) / (2 * n)
         return (P)
