@@ -21,7 +21,7 @@ def P_affinities(X, tol=1e-5, perplexity=30.0):
     # variables
     (n, d) = X.shape
     D, P, betas, H = P_init(X, perplexity)
-    logU = np.log(perplexity)
+    # logU = np.log(perplexity)
     sumX = np.sum(np.square(X), 1)
 
     # loop over data points
@@ -33,7 +33,7 @@ def P_affinities(X, tol=1e-5, perplexity=30.0):
         (Hi, Pi) = HP(Di, betas[idx])
 
         # calculate if perplexity is within tolerance
-        diffH = Hi - logU
+        diffH = Hi - H
 
         while np.abs(diffH) > tol:
 
@@ -52,7 +52,7 @@ def P_affinities(X, tol=1e-5, perplexity=30.0):
                     betas[idx] = (betas[idx] + betaMin) / 2
 
                 (Hi, Pi) = HP(Di, betas[idx])
-                diffH = Hi - logU
+                diffH = Hi - H
 
         Pi = np.insert(Pi, idx, 0)
         P[idx] = Pi
