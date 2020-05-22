@@ -3,6 +3,8 @@
 Initialize cluster centroids for K-means
 """
 
+import numpy as np
+
 
 def initialize(X, k):
     """
