@@ -21,8 +21,6 @@ def initialize(X, k):
 
     if not isinstance(X, np.ndarray) or len(X.shape) != 2:
         return None
-    if not isinstance(k, int) or k < 1:
+    if not isinstance(k, int) or k <= 0 or k >= n:
         return None
-    if k > n or d < 1:
-        return None
-    return np.random.uniform(np.min(X, axis=0), np.max(X, axis=0), (k, d))
+    return np.random.uniform(np.amin(X, axis=0), np.amax(X, axis=0), (k, d))
