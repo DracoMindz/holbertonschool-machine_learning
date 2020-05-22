@@ -18,8 +18,8 @@ def kmeans(X, k, iterations=1000):
     """
 
     centroids = initialize(X, k)
-    if iterations < 0 or not isinstance(iterations, int):
-        return None
+    if not isinstance(iterations, int) or iterations < 1:
+        return None, None
     if centroids is None:
         return None, None
     pt_assign = np.zeros(X.shape[0], dtype=int)
