@@ -17,11 +17,11 @@ def initialize(X, k):
     :return: np.ndarray, of shape (k, d)
     """
     d = X.shape[1]
-
+    n = X.shape[0]
     if (not isinstance(X, np.ndarray) or len(X.shape) != 2):
         return None
-    if (not isinstance(k, int) or k <= 0 or k >= X.shape[0]):
+    if (not isinstance(k, int) or k < 1 or k > n):
         return None
-    max_X = np.amax(X, axis=0)
     min_X = np.amin(X, axis=0)
-    return np.random.uniform(max_X, min_X, (k, d))
+    max_X = np.amax(X, axis=0)
+    return np.random.uniform(min_X, max_X, (k, d))
