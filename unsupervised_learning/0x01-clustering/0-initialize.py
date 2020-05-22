@@ -23,4 +23,6 @@ def initialize(X, k):
         return None
     if not isinstance(k, int) or k <= 0 or k >= n:
         return None
-    return np.random.uniform(np.amin(X, axis=0), np.amax(X, axis=0), (k, d))
+    centroids = np.random.uniform(np.amin(X, axis=0),
+                                  np.amax(X, axis=0), (k, d))
+    return centroids
