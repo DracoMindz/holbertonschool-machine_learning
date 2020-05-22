@@ -24,5 +24,4 @@ def initialize(X, k):
         return None
     max_X = np.amax(X, axis=0)
     min_X = np.amin(X, axis=0)
-    centroids = np.random.uniform(max_X, min_X, (k, d))
-    return centroids
+    return np.random.uniform(max_X, min_X, (k, d))
