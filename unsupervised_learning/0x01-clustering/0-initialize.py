@@ -16,14 +16,13 @@ def initialize(X, k):
     :param k: pos integer containing the num clusters
     :return: np.ndarray, of shape (k, d)
     """
-
-    n = X.shape[0]
     d = X.shape[1]
 
     if (not isinstance(X, np.ndarray) or len(X.shape) != 2):
         return None
-    if (not isinstance(k, int) or k <= 0 or k >= n or d < 1):
+    if (not isinstance(k, int) or k <= 0 or k >= X.shape[0] or d < 1):
         return None
-    centroids = np.random.uniform(np.amin(X, axis=0),
-                                  np.amax(X, axis=0), (k, d))
+    max_X = np.amax(X, axis=0)
+    min_X = np.amin(X, axis=o)
+    centroids = np.random.uniform(max_X, min_X, (k, d))
     return centroids
