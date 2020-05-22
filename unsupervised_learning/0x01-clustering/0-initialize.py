@@ -15,7 +15,7 @@ def initialize(X, k):
     :return: np.ndarray, of shape (k, d)
     """
     d = X.shape[1]
-    if not isinstance(X, np.ndarray) or len(X.shape) != 2:
+    if type(X) != np.ndarray or len(X.shape) != 2:
         return None
     if type(k) != int or k <= 0 or k >= X.shape[0]:
         return None
