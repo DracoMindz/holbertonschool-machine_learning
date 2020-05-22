@@ -37,6 +37,7 @@ def kmeans(X, k, iterations=1000):
                 max_X = X.max(axis=0)
                 centroids[c_indx] = np.random.uniform(min_X, max_X,
                                                       (1, X.shape[1]))
+                continue
             centroids[c_indx] = X[assigned, :].sum(axis=0) / assigned.sum()
         if (pt_assign == previous).all():
             break
