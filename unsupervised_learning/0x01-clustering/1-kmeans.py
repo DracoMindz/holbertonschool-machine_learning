@@ -18,7 +18,7 @@ def kmeans(X, k, iterations=1000):
     """
 
     centroids = initialize(X, k)
-    if iterations < 1 or not isinstance(iterations, int):
+    if iterations < 0 or not isinstance(iterations, int):
         return None
     if centroids is None:
         return None, None
