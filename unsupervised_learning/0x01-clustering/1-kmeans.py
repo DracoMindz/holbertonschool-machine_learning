@@ -29,16 +29,16 @@ def kmeans(X, k, iterations=1000):
 
         #  iterate through the length of the centroids
         for c_indx in range(len(centroids)):
-            assigned = np.where(pt_assign == c_indx, True, False)
+            assigned_pts= np.where(pt_assign == c_indx, True, False)
 
         #  multivariate uniform distribution
-            if assigned.sum() == 0:
+            if assigned_pts.sum() == 0:
                 min_X = X.min(axis=0)
                 max_X = X.max(axis=0)
                 centroids[c_indx] = np.random.uniform(min_X, max_X,
                                                       (1, X.shape[1]))
                 continue
-            centroids[c_indx] = X[assigned, :].sum(axis=0) / assigned.sum()
+            centroids[c_indx] = X[assigned_pts, :].sum(axis=0) / assigned_pts.sum()
         if (pt_assign == previous).all():
             break
         iterations -= 1
@@ -56,10 +56,10 @@ def update_assignedpts(centroids, X, pt_assign):
             # check if point assigned match centroid index
             if assigned_point == c_indx:
                 continue
-            aptcent_diff = (point - centroids[assigned_point])
-            ptcent_diff = (point - centroid)
-            assigned = pow(aptcent_diff, 2).sum()
-            verify_pts = pow(ptcent_diff, 2).sum()
+            # aptcent_diff = (point - centroids[assigned_point])
+            # ptcent_diff = (point - centroid)
+            assigned = pow(point - centroids[assigned_point], 2).sum()
+            verify_pts = pow(point - centroid, 2).sum()
             if verify_pts < assigned:
                 pt_assign[p_indx] = c_indx
 
