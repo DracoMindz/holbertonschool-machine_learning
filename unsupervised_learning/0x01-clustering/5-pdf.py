@@ -25,14 +25,14 @@ def pdf(X, m, S):
         return None
     if S.shape[0] != S.shape[1] or X.shape[1] != S.shape[1]:
         return None
-    # n, d = X.shape
-    g_pdf = np.empty(X.shape[0])
-    for index, xndx in enumerate(X):
-        xm = (xndx - m)
-        d = X.shape[1]
-        g_pdf[index] = (np.exp(np.dot(np.dot((xm),
-                                             np.linalg.inv(S)),
-                                      xm.T) / -2) /
-                        np.sqrt(pow(2 * np.pi, d) * np.linalg.det(S)))
-    P = np.where(g_pdf > 1e-300, g_pdf, 1e-300)
+
+    n, d = X.shape
+    Xm_diff = (X - m)
+    invS = np.linalg.inv(S)
+    detS = np.linalg.det(S)
+    dp_matVec = np.einsum('...k,kl,...l->...', Xm_diff, invS, Xm_diff)
+    Psub1 = (pow(np.sqrt((2*np.pi)**d * detS), -1))
+    Psub2 = np.exp(-dp_matVec / 2)
+    P = Psub1 * Psub2
+    P = np.where(P > 1e-300, P, 1e-300)
     return P
