@@ -25,7 +25,7 @@ def expectation(X, pi, m, S):
         return None, None
     if not isinstance(S, np.ndarray) or len(S.shape) != 3:
         return None, None
-    if X.shape[1] != m.shape[1] != S.shape[2] != S.shape[1]:
+    if X.shape[1] != m.shape[1] != S.shape[1] != S.shape[2]:
         return None, None
     if pi.shape[0] != m.shape[0] != S.shappe[0]:
         return None, None
@@ -35,6 +35,8 @@ def expectation(X, pi, m, S):
     if k > n:
         return None, None
     if k != m.shape[0] or k != S.shape[0]:
+        return None, None
+    if d != m.shape[1] or d != S.shape[1] or d != S.shape[2]:
         return None, None
     if not np.isclose([np.sum(pi)], [1])[0]:
         return None, None
