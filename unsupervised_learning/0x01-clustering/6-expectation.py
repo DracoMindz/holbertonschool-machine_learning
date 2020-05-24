@@ -36,6 +36,8 @@ def expectation(X, pi, m, S):
         return None, None
     if k != m.shape[0] or k != S.shape[0]:
         return None, None
+    if not np.isclose([np.sum(pi)], [1])[0]:
+        return None, None
 
     # create an array w/ kxn dimensionality
     g_arr = np.zeros((k, n))
