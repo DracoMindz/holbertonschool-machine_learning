@@ -34,7 +34,7 @@ def maximization(X, g):
     S = np.zeros((k, d, d))
 
     for idx in range(k):
-        g_sum = np.sum(g[idx])
+        g_sum = np.sum(g[idx], axis=0)
 
         # calculate & update pi
         pi[idx] = g_sum / n
