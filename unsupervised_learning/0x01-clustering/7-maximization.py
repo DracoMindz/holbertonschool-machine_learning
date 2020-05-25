@@ -10,17 +10,17 @@ def maximization(X, g):
     updating the clusters
     :param X: np.ndarray, (n, d), data set
     :param g: np.ndarray, (k, n), posterior probs
-                for eah data point in eacch cluster
+                for eah data point in each cluster
     :return: pi, m, S, or None, None, None
     """
     if not isinstance(X, np.ndarray) or len(X.shape) != 2:
         return None, None, None
     if not isinstance(g, np.ndarray) or len(X.shape) != 2:
         return None, None, None
+    if X.shape[0] != g.shape[1]:
+        return None, None, None
 
     n, d = X.shape
-    if n != g.shape[1]:
-        return None, None, None
 
     prob_sum = np.sum(g, axis=0)
     prob_tot = np.ones((n, ))
@@ -36,14 +36,14 @@ def maximization(X, g):
     for idx in range(k):
         g_sum = np.sum(g[idx], axis=0)
 
-        # calculate & update pi
-        pi[idx] = np.sum(g[idx]) / n
-
         # calculate & update m
         m[idx] = np.sum((g[idx, :, np.newaxis] * X), axis=0) / (g_sum)
 
         # update  covariance
         cov_sum = np.dot(g[idx] * (X - m[idx]).T, (X - m[idx]))
         S[idx] = cov_sum / np.sum(g[idx])
+
+        # calculate & update pi
+        pi[idx] = np.sum(g[idx]) / n
 
     return (pi, m, S)
