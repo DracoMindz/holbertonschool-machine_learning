@@ -23,7 +23,7 @@ def maximization(X, g):
         return None, None, None
 
     prob_sum = np.sum(g, axis=0)
-    prob_tot = np.ones((n,))
+    prob_tot = np.ones((n, ))
     # remember to use np.isclose
     if not np.isclose(prob_sum, prob_tot).all():
         return None, None, None
@@ -37,7 +37,7 @@ def maximization(X, g):
         g_sum = np.sum(g[idx], axis=0)
 
         # calculate & update pi
-        pi[idx] = g_sum / n
+        pi[idx] = np.sum(g[idx]) / n
 
         # calculate & update m
         m[idx] = np.sum((g[idx, :, np.newaxis] * X), axis=0) / (g_sum)
@@ -45,4 +45,5 @@ def maximization(X, g):
         # update  covariance
         cov_sum = np.dot(g[idx] * (X - m[idx]).T, (X - m[idx]))
         S[idx] = cov_sum / np.sum(g[idx])
+
     return (pi, m, S)
