@@ -10,7 +10,7 @@ pdf = __import__('5-pdf').pdf
 
 def expectation(X, pi, m, S):
     """
-    assign instances to clusters EM for GMM
+    asign instances to clusters EM for GMM
     :param X: np.ndarray, shape(n, d), contains data set
     :param pi:np.ndarray, shape(k,), contains priors for cluster
     :param m:np.ndarray, shape(k, d), contains centroid means for clusters
