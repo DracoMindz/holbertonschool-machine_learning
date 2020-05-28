@@ -2,8 +2,6 @@
 """
 Function performs K-means on a data
 """
-
-import numpy as np
 import sklearn.cluster
 
 
@@ -18,4 +16,5 @@ def kmeans(X, k):
     :return: C, clss
     """
     means = sklearn.cluster.KMeans(n_clusters=k).fit(X)
+
     return means.cluster_centers_, means.labels_
