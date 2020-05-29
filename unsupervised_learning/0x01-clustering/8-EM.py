@@ -35,9 +35,6 @@ def expectation_maximization(X, k, iterations=1000,
 
     # initialize pi, mean, covariance
     pi, m, S = intialize(X, k)
-    if (pi, m, S) is None:
-        # pi == None or m == None, S == None
-        return None, None, None, None, None, None
 
     prevL = 0
     for i in range(iterations):
