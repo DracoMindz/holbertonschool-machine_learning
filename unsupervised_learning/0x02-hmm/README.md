@@ -1,7 +1,7 @@
 # 0x02 Hidden Markov Models
 Specializations - Machine Learning ― Unsupervised Learning
 
-### Learning Objectives
+## Learning Objectives
 ```
 -What is the Markov property?
 -What is a Markov chain?
@@ -26,7 +26,7 @@ Specializations - Machine Learning ― Unsupervised Learning
 -What is the Baum-Welch algorithm and how do you implement it?
 ```
 
-### Tasks
+## Tasks
 
 **0. Markov Chain**
 ---
