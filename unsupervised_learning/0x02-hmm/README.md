@@ -45,13 +45,13 @@ the steady state probabilities of a regular markov chain.
 Write the function def absorbing(P): that determines if 
 a markov chain is absorbing.
 
-**3. The Forward Algorithm **
+**3. The Forward Algorithm**
 ---
 Write the function def forward(Observation, Emission,
 Transition, Initial): that performs the forward algorithm
 for a hidden markov model.
 
-***4. The Viretbi Algorithm***
+**4. The Viretbi Algorithm**
 ---
 Write the function def viterbi(Observation, Emission,
 Transition, Initial): that calculates the most likely
@@ -63,7 +63,7 @@ Write the function def backward(Observation, Emission,
 Transition, Initial): that performs the backward algorithm
 for a hidden markov model.
 
-***6. The Baum-Welch Algorithm***
+**6. The Baum-Welch Algorithm**
 ---
 Write the function def baum_welch(Observations, N, M, 
 Transition=None, Emission=None, Initial=None): that performs
