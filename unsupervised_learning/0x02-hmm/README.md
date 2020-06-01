@@ -30,7 +30,7 @@ Specializations - Machine Learning ― Unsupervised Learning
 
 **0. Markov Chain**
 ---
-Write the function def markov_chain(P, s, t=1):
+Write the function def markov_chain(P, s, t=1):0
 that determines the probability of a markov chain
 being in a particular state after a specified
 number of iterations.
