@@ -21,6 +21,8 @@ def regular(P):
         return None
     if (np.where(P < 0, 1, 0).any()):
         return None
+    # if np.sum(P, axis=1).all() != 1:
+        # return None
     n = P.shape[0]
     states = [P]
     probNow = P
