@@ -41,6 +41,8 @@ def forward(Observation, Emission, Transition, Initial):
     N, M = Emission.shape
     N, N = Transition.shape
     F = np.zeros((N, T))
+    #  second position in  return second position in []
+    #  F = alpha
     F[:, 0] = Initial.T * Emission[:, Observation[0]]
 
     for t in range(1, T):

@@ -30,7 +30,7 @@ def absorbing(P):
         # if the diagnol returned is not all 1s return False
         return False
 
-    for i in (range(P.shape[0])):
+    for i in (range(P.shape[0])):3
         # account for the transitioning from state i to state j
         for j in (range(P.shape[1])):
             # verify above NUll does not apply

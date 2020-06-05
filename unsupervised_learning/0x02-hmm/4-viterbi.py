@@ -57,13 +57,14 @@ def viterbi(Observation, Emission, Transition, Initial):
     backTrak[:, 0] = 0
 
     for i in range(1, T):
+        #  similar to forward. changes are with respect to vitAlg
         vitAlg[:, i] = np.max(vitAlg[:, i - 1] * Transition.T *
                               Emission[np.newaxis, :, Observation[i]].T, 1)
         backTrak[:, i] = np.argmax(vitAlg[:, i - 1] * Transition.T, 1)
 
     for i in range(T):
         x = 0
-    x[- 1] = np.argmax(vitAlg[:, 0])
+    x[- 1] = np.argmax(vitAlg[:, 0])   # make change here
     for i in reversed(range(1, T)):
         b = backTrak[x[i], i]
         x[i - 1] = int(b)
