@@ -14,7 +14,7 @@ if __name__ == '__main__':
     X_init = np.random.uniform(-np.pi, 2*np.pi, (2, 1))
     Y_init = f(X_init)
 
-    bo = BO(f, X_init, Y_init, (-np.pi, 2*np.pi), 50, l=0.6, sigma_f=2)
+    bo = BO(f, X_init, Y_init, (-np.pi, 2*np.pi), 50, L=0.6, sigma_f=2)
     X_opt, Y_opt = bo.optimize(50)
     print('Optimal X:', X_opt)
     print('Optimal Y:', Y_opt)

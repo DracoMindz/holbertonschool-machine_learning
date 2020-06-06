@@ -63,9 +63,9 @@ class GaussianProcess:
 
         # update kernel witout adding sigma_y**2
         kern = self.kernel(self.X, self.X)
-        kern_inv = np.linalg.inv(self.kern)
+        kern_inv = np.linalg.inv(kern)
         kern_update = self.kernel(self.X, X_s)
-        kern_update2 = self.kern(X_s, X_s)
+        kern_update2 = self.kernel(X_s, X_s)
 
         # calculate the mean
         mean = kern_update.T.dot(kern_inv).dot(self.Y)
