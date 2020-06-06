@@ -14,7 +14,7 @@ class BayesianOptimization:
     """
 
     def __init__(self, f, X_init, Y_init, bounds, ac_samples,
-                 L=1, sigma_f=1, xsi=0.01, minimize=True):
+                 l=1, sigma_f=1, xsi=0.01, minimize=True):
         """
         Class constructor
         :param self: creat public attributes
@@ -43,7 +43,7 @@ class BayesianOptimization:
                                num=ac_samples).reshape(-1, 1)
         self.xsi = xsi
         self.minimize = minimize
-        self.gp = GP(X_init, Y_init, L, sigma_f)
+        self.gp = GP(X_init, self.Y_init, l, sigma_f)
 
     def acquisition(self):
         """
@@ -69,3 +69,34 @@ class BayesianOptimization:
 
             X_next = self.X_s[np.argmax(EI)]
         return X_next, EI
+
+    def optimize(self, iterations=100):
+        """
+        Optimizes the black-box function
+        :param iterations:  max num of iterations to perform
+        X_opt: np.ndarray (1,) the optimal point
+        Y_opt: np.ndarray (1,) the optimal function
+        :return: X_opt, Y_opt
+        """
+
+        sampleY = self.Y_init
+        sampleX = self.X_init
+        ptsUsed = []  # list of used pts
+
+        for i in range(iterations):
+            X_next, _ = self.acquisition()
+            # compare X_next to list of used pts
+            if X_next in ptsUsed:
+                break   # if the point has been used stop
+            Y_next = self.f(X_next)
+            self.gp.update(X_next, Y_next)
+            ptsUsed.append(X_next)  # store used pts
+
+        if self.minimize is True:
+            pts = np.argmin(self.gp.Y)
+        else:
+            pts = np.argmax(self.gp.Y)
+        X_opt = self.gp.X[pts]
+        Y_opt = self.gp.Y[pts]
+
+        return X_opt, Y_opt

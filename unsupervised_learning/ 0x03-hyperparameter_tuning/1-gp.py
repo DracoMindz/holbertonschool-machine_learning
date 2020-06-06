@@ -8,7 +8,7 @@ import numpy as np
 class GaussianProcess:
 
     """ Class reoresents noisless 1D Gaussian Process"""
-    def __init__(self, X_init, Y_init, L=1, sigma_f=1):
+    def __init__(self, X_init, Y_init, l=1, sigma_f=1):
         """
         class comstructor
         :param self:
@@ -24,7 +24,7 @@ class GaussianProcess:
         # Y_init = np.ndarray(shape=(t, 1))
         self.X = X_init
         self.Y = Y_init
-        self.L = L
+        self.l = l
         self.sigma_f = sigma_f
         self.K = self.kernel(self.X, self.X)
 
@@ -44,7 +44,7 @@ class GaussianProcess:
         # quared distance
         sqdist = np.sum(X1**2, 1).reshape(-1, 1)\
             + np.sum(X2**2, 1) - 2 * np.dot(X1, X2.T)
-        covMatrix = self.sigma_f**2 * np.exp(-0.5 / self.L**2 * sqdist)
+        covMatrix = self.sigma_f**2 * np.exp(-0.5 / self.l**2 * sqdist)
         print(covMatrix)
         return covMatrix
 
@@ -63,9 +63,9 @@ class GaussianProcess:
 
         # update kernel witout adding sigma_y**2
         kern = self.kernel(self.X, self.X)
-        kern_inv = np.linalg.inv(self.kern)
+        kern_inv = np.linalg.inv(kern)
         kern_update = self.kernel(self.X, X_s)
-        kern_update2 = self.kern(X_s, X_s)
+        kern_update2 = self.kernel(X_s, X_s)
 
         # calculate the mean
         mean = kern_update.T.dot(kern_inv).dot(self.Y)

@@ -14,7 +14,7 @@ class BayesianOptimization:
     """
 
     def __init__(self, f, X_init, Y_init, bounds, ac_samples,
-                 L=1, sigma_f=1, xsi=0.01, minimize=True):
+                 l=1, sigma_f=1, xsi=0.01, minimize=True):
         """
         Class constructor
         :param self: creat public attributes
@@ -43,8 +43,7 @@ class BayesianOptimization:
                                num=ac_samples).reshape(-1, 1)
         self.xsi = xsi
         self.minimize = minimize
-        self.gp = GP(self.X_init, self.Y_init, L, sigma_f)
-
+        self.gp = GP(X_init, self.Y_init, l, sigma_f)
 
     def acquisition(self):
         """
