@@ -17,7 +17,6 @@ What is Knowledge Gradient?
 What is Entropy Search/Predictive Entropy Search?
 What is GPy?
 What is GPyOpt?
-
 ```
 
 ### Tasks
