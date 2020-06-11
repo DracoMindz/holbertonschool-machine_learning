@@ -79,18 +79,18 @@ class BayesianOptimization:
         :return: X_opt, Y_opt
         """
 
-        sampleY = self.Y_init
-        sampleX = self.X_init
-        ptsUsed = []  # list of used pts
+        # sampleY = self.Y_init
+        # sampleX = self.X_init
+        # ptsUsed = []  # list of used pts
 
         for i in range(iterations):
             X_next, _ = self.acquisition()
             # compare X_next to list of used pts
-            if X_next in ptsUsed:
+            if X_next in self.gp.X:
                 break   # if the point has been used stop
-            Y_next = self.f(X_next)
+            # Y_next = self.f(X_next)
             self.gp.update(X_next, Y_next)
-            ptsUsed.append(X_next)  # store used pts
+            # ptsUsed.append(X_next)  # store used pts
 
         if self.minimize is True:
             pts = np.argmin(self.gp.Y)
