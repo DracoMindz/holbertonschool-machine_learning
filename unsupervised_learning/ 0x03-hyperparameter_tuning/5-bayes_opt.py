@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Class BayesianOptimization
+Class Bayesian Optimization
 """
 import numpy as np
 from scipy.stats import norm
