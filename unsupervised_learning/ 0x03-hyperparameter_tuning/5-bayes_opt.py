@@ -55,17 +55,18 @@ class BayesianOptimization:
         sigma = sigma.reshape(-1, 1)
         # m_opt_sample = np.max(self.X_init)
         if self.minimize is True:
-            opt_ptsMin = np.amin(self.gp.Y)
+            opt_ptsMin = np.min(self.gp.Y)
             opt_pts = opt_ptsMin - m - self.xsi
         else:
-            opt_ptsMax = np.amax(self.gp.Y)
+            opt_ptsMax = np.max(self.gp.Y)
             opt_pts = m - opt_ptsMax - self.xsi
 
         with np.errstate(divide='warn'):
 
             Zed = opt_pts / sigma
             EI = opt_pts * norm.cdf(Zed) + sigma * norm.pdf(Zed)
-            # EI[sigma == 0.0] = 0.0
+            EI[sigma == 0.0] = 0.0
+            np.maximum(EI, 0)
 
             X_next = self.X_s[np.argmax(EI)]
         return X_next, EI
