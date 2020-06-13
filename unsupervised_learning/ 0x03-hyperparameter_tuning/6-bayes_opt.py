@@ -4,3 +4,4 @@ Optimizing with GPyOpt
 """
 
 import numpy as np
+

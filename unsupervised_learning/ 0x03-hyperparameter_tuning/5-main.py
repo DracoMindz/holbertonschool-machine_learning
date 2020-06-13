@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
 
-BO = __import__('5-bayes_opt').BayesianOptimization
 import matplotlib.pyplot as plt
 import numpy as np
+BO = __import__('5-bayes_opt').BayesianOptimization
 
 
 def f(x):
     """our 'black box' function"""
     return np.sin(5*x) + 2*np.sin(-2*x)
+
 
 if __name__ == '__main__':
     np.random.seed(0)

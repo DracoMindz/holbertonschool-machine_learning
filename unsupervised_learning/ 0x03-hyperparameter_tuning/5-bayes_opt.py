@@ -14,7 +14,7 @@ class BayesianOptimization:
     """
 
     def __init__(self, f, X_init, Y_init, bounds, ac_samples,
-                 l=1, sigma_f=1, xsi=0.01, minimize=True):
+                 L=1, sigma_f=1, xsi=0.01, minimize=True):
         """
         Class constructor
         :param self: creat public attributes
@@ -43,7 +43,7 @@ class BayesianOptimization:
                                num=ac_samples).reshape(-1, 1)
         self.xsi = xsi
         self.minimize = minimize
-        self.gp = GP(X_init, self.Y_init, l, sigma_f)
+        self.gp = GP(X_init, Y_init, L, sigma_f)
 
     def acquisition(self):
         """
@@ -51,9 +51,7 @@ class BayesianOptimization:
         :return: X_next, EI
         """
         m, sigma = self.gp.predict(self.X_s)
-        # m_sample, sigma = self.gp.predict(self.X_s)
-        sigma = sigma.reshape(-1, 1)
-        # m_opt_sample = np.max(self.X_init)
+        # sigma = sigma.reshape(-1, 1)
         if self.minimize is True:
             opt_ptsMin = np.min(self.gp.Y)
             opt_pts = opt_ptsMin - m - self.xsi
@@ -62,13 +60,12 @@ class BayesianOptimization:
             opt_pts = m - opt_ptsMax - self.xsi
 
         with np.errstate(divide='warn'):
-
             Zed = opt_pts / sigma
-            EI = opt_pts * norm.cdf(Zed) + sigma * norm.pdf(Zed)
+            # EI = np.ndarray(ac_samples,)
+            EI = (opt_pts * norm.cdf(Zed)) + (sigma * norm.pdf(Zed))
             EI[sigma == 0.0] = 0.0
-            np.maximum(EI, 0)
+            X_next = self.X_s[(np.argmax(EI, 0))]
 
-            X_next = self.X_s[np.argmax(EI)]
         return X_next, EI
 
     def optimize(self, iterations=100):
@@ -84,14 +81,13 @@ class BayesianOptimization:
         # sampleX = self.X_init
         # ptsUsed = []  # list of used pts
 
-        for i in range(iterations):
+        for m in range(iterations):
             X_next, _ = self.acquisition()
             # compare X_next to list of used pts
             if X_next in self.gp.X:
                 break   # if the point has been used stop
-            # Y_next = self.f(X_next)
+            Y_next = self.f(X_next)
             self.gp.update(X_next, Y_next)
-            # ptsUsed.append(X_next)  # store used pts
 
         if self.minimize is True:
             pts = np.argmin(self.gp.Y)
