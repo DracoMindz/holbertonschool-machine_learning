@@ -3,7 +3,6 @@
 A function that creates an autoencoder
 """
 
-import numpy as np
 import tensorflow as tf
 from tensorflow import keras as K
 
@@ -39,8 +38,8 @@ def autoencoder(input_dims, hidden_layers, latent_dims):
         # second output layer
         en_output_2 = K.layers.Dense(hidden_layers[idx],
                                      activation='relu')(en_output_1)
-        encoderOutput = K.layers.Dense(latent_dims,
-                                       activation='relu')(en_output_2)
+    encoderOutput = K.layers.Dense(latent_dims,
+                                   activation='relu')(en_output_2)
 
     # encoder Model
     encoder = K.models.Model(inputs=encoderInput, outputs=encoderOutput)
@@ -50,8 +49,8 @@ def autoencoder(input_dims, hidden_layers, latent_dims):
         # second output layer
         de_output_2 = K.layers.Dense(hidden_layers[idx],
                                      activation='relu')(de_output_1)
-        decoderOutput = K.layers.Dense(latent_dims,
-                                       activation='sigmoid')(de_output_2)
+    decoderOutput = K.layers.Dense(latent_dims,
+                                   activation='sigmoid')(de_output_2)
 
     # decoder Model
     decoder = K.models.Model(inputs=decoderInput, outputs=decoderOutput)
@@ -61,6 +60,6 @@ def autoencoder(input_dims, hidden_layers, latent_dims):
     encoderAuto = encoder(autoInput)
     decoderAuto = decoder(encoderAuto)
     auto = K.Model(inputs=autoInput, outputs=decoderAuto)
-    auto.compile(optimizer='adam', loss='binary_crossentropy')
+    auto.K.model.compile(optimizer='Adam', loss='binary_crossentropy')
 
-    return encoder, decoder, auto
+    return (encoder, decoder, auto)
