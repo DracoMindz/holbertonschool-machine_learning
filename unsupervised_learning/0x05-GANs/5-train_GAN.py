@@ -28,8 +28,3 @@ def train_gan(X, epochs, batch_size, Z_dim, save_path='/tmp'):
     """
     for ep in range(epochs):
         for bat in X:
-
-
-
-
-
