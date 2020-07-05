@@ -28,9 +28,6 @@ def rnn(rnn_cell, X, h_0):
     H[0] = h_0
     for step in range(t):
         H[step+1], y_layer = rnn_cell.forward(H[step], X[step])
-        # if step == 0:
-        # Y = y_layer
-        # else:
         Y.append(y_layer)
     # reshape or asarray to return np.ndarray
     Y = np.asarray(Y)
