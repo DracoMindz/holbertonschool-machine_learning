@@ -26,7 +26,7 @@ class BidirectionalCell:
         # public attributes weights; initialized
         self.Whf = np.random.normal(size=(i+h, h))
         self.Whb = np.random.normal(size=(i+h, h))
-        self.Wy = np.random.normal(size=(h, o))
+        self.Wy = np.random.normal(size=(2*h, o))
 
         # public attributes baises; intialized
         self.bhf = np.zeros((1, h))
