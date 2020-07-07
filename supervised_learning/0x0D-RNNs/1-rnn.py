@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Fuction performs forward propagation for simple RNN
+Function performs forward propagation for simple RNN
 """
 
 import numpy as np
