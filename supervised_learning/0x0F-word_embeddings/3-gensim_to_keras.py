@@ -14,7 +14,7 @@ def gensim_to_keras(model):
     :return: trainable keras embedding
     """
     e_layer = K.layers.Embedding(input_dim,
-                                 output_dim,
+                                 output_dim=model.size,
                                  embeddings_initializer='uniform',
                                  embeddings_regularizer=None,
                                  activity_regularizer=None,
