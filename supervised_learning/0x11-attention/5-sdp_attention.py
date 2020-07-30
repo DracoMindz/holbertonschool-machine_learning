@@ -3,7 +3,7 @@
 Function that calcuylates the scaled dot product attention
 """
 
-import numpy as np
+
 import tensorflow as tf
 
 
@@ -27,15 +27,15 @@ def sdp_attention(Q, K, V, mask=None):
         weights: tensor w/ last vtwo dims as (..., seq_len__q, seq_len_v)
                 contains: attention weights
     """
-    matmul_qk = tf.matmul(q, k, transpose_b=True)
+    matmul_qk = tf.matmul(Q, K, transpose_b=True)
     scald_qk = tf.cast(tf.shape(K)[-1], tf.float32)
-    scald_atten = matmul_qk / tf.math.sqrt(dk)
+    scald_atten = matmul_qk / tf.math.sqrt(scald_qk)
 
     # masked added to tensor
     if mask is not None:
         scald_attention += (mask * -1e9)
     # weights are the attention weights
-    weights = tf.nn.softmax(scaled_atten, axis=-1)
+    weights = tf.nn.softmax(scald_atten, axis=-1)
     output = tf.matmul(weights, V)
 
-    return outputs, weights
+    return output, weights
