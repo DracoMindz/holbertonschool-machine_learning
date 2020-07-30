@@ -18,7 +18,7 @@ class MultiHeadAttention(tf.keras.layers.Layer):
         Public Instances
         h: num of heads
         dm: dims of the model
-        depth: depth of each attention head
+        depth: depth of each atten head
         Wq: Dense layer w/ dm units
             used to generate query matrix
         Wk: Dense layer w/ dm units
