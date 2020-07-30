@@ -4,10 +4,10 @@ Class EncoderBlock
 """
 
 import tensorflow as tf
-MultiHeadAttention = __import__('6-multihead_attention').MultiHeadAttention
+MultiHeadAttention = __import__('6-multi_head_attention').MultiHeadAttention
 
 
-class EncoderBlock(tensorflow.keras.layers.Layer):
+class EncoderBlock(tf.keras.layers.Layer):
     """create encoder block for a transformer"""
 
     def __init__(self, dm, h, hidden, drop_rate=0.1):
