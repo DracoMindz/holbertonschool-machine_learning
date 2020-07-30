@@ -18,7 +18,8 @@ def sdp_attention(Q, K, V, mask=None):
             contains value matrix
     :param mask: tensor can broadcast into (..., seq_len_q, seq_len_v)
             contains optional mask or defaulted to NONE
-    Note: if mask is none, nult -1e9 to mask and add it to ths scaled matrix mult
+    Note: if mask is none, nult -1e9 to mask and add it to
+            ths scaled matrix mult
     Note: Q, K, V dimemsions are the same
     :return: outputs, weights
         outputs: tensor w/ last two dims as (..., seq_len_q, dv)
@@ -27,7 +28,7 @@ def sdp_attention(Q, K, V, mask=None):
                 contains: attention weights
     """
     matmul_qk = tf.matmul(q, k, transpose_b=True)
-    scald_qk =tf.cast(tf.shape(K)[-1], tf.float32)
+    scald_qk = tf.cast(tf.shape(K)[-1], tf.float32)
     scald_atten = matmul_qk / tf.math.sqrt(dk)
 
     # masked added to tensor

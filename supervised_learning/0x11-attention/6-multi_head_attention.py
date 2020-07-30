@@ -58,7 +58,8 @@ class MultiHeadAttention(tensorflow.keras.layers.Layer):
         Returns: output, weights
                 output: tensor with last two dims (..., seq_len_q, dm)
                         contains scaled dot product attention
-                weights: tensor with last three dims (..., h, seq_len_q, seq_len_v)
+                weights: tensor with last three dims
+                        (..., h, seq_len_q, seq_len_v)
                         contains attention weights
         """
         # batch size

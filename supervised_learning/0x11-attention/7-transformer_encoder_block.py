@@ -56,7 +56,7 @@ class EncoderBlock(tensorflow.keras.layers.Layer):
         # forward feeding
         output_2 = self.dense_hidden(output_3)
         output_1 = self.dense_output(output_2)
-        output_0 = self.dropout2(output_1, training= training)
+        output_0 = self.dropout2(output_1, training=training)
         output = self.layernorm2(output_3 + output_0)
 
         return output

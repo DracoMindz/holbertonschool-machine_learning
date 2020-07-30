@@ -2,13 +2,12 @@
 """
 Class SelfAttention
 """
-import numpy
 import tensorflow as tf
 
 
 class SelfAttention(tf.keras.layers.Layer):
     """
-    SelfAttention Class
+    Self Attention Class
     """
     def __init__(self, units):
         """
@@ -40,11 +39,10 @@ class SelfAttention(tf.keras.layers.Layer):
             weights: tensor shape(batch, input_seq_len, 1)
             contains attention weights
         """
-        decW = self.W(s_prev)
-        decW = tf.expand_dims(decW, axis=1)
+        decW = tf.expand_dims(s_prev, 1)
+        decW = self.W(decW)
         encU = self.U(hidden_states)
-        outV = self.V((tf.nn.tanh(decW +encU)))
+        outV = self.V((tf.nn.tanh(decW + encU)))
         weights = tf.nn.softmax(outV, axis=1)
         context = tf.reduce_sum((weights * hidden_states), axis=1)
         return context, weights
-

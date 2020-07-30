@@ -6,6 +6,7 @@ Class DecoderBlock
 import tensorflow as tf
 MultiHeadAttention = __import__('6-multihead_attention').MultiHeadAttention
 
+
 class DecoderBlock(tensorflow.keras.layers.Layer):
     """ Decoder Block Class
     creates a decoder block for a transformer
@@ -64,7 +65,9 @@ class DecoderBlock(tensorflow.keras.layers.Layer):
         attn_1 = self.dropout1(attn_1, training=training)
         output1 = self.layernorm1(x + attn_1)
 
-        attn_2, weights_b2 = self.mha2(encoder_output, encoder_output, output1, padding_mask)
+        attn_2, weights_b2 = self.mha2(encoder_output,
+                                       encoder_output,
+                                       output1, padding_mask)
         attn_2 = self.dropout2(attn_2, training=training)
         output2 = self.layernorm2(attn_2 + output1)
 
