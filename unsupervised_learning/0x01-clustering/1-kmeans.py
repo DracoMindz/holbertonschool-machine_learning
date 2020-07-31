@@ -15,7 +15,7 @@ def initialize(X, k):
         return None
     if type(k) != int or k <= 0 or k > X.shape[0]:
         return None
-    d = X.shape[1]
+    n, d = X.shape
     min_X = X.min(axis=0)
     max_X = X.max(axis=0)
     return np.random.uniform(min_X, max_X, size=(k, d))
@@ -33,7 +33,7 @@ def kmeans(X, k, iterations=1000):
 
     centroids = initialize(X, k)
 
-    if type(iterations) != int or iterations < 1:
+    if type(iterations) != int or iterations <= 0:
         return None, None
     if centroids is None:
         return None, None
