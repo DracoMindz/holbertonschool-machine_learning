@@ -4,7 +4,7 @@ Class EncoderBlock
 """
 
 import tensorflow as tf
-MultiHeadAttention = __import__('6-multi_head_attention').MultiHeadAttention
+MultiHeadAttention = __import__('6-multihead_attention').MultiHeadAttention
 
 
 class EncoderBlock(tf.keras.layers.Layer):
@@ -50,7 +50,7 @@ class EncoderBlock(tf.keras.layers.Layer):
                 Contains output
         """
         attnOutput, _ = self.mha(x, x, x, mask)
-        attnOutput = self.dropout(attnOutput, training=training)
+        attnOutput = self.dropout1(attnOutput, training=training)
         output_3 = self.layernorm1(x + attnOutput)
 
         # forward feeding

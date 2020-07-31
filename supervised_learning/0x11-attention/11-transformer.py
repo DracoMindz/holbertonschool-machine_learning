@@ -53,8 +53,7 @@ class Transformer(tf.keras.Model):
         Returns: a tensor of shape (batch, target_seq_len, target_vocab)
                 containing the transformer output
         """
-        enc_output = self.encoder(inputs, training, encoder_mask,
-                                  look_ahead_mask, decoder_mask)
+        enc_output = self.encoder(inputs, training, encoder_mask)
         dec_output = self.decoder(target, enc_output, training,
                                   look_ahead_mask, decoder_mask)
         output = self.linear(dec_output)
