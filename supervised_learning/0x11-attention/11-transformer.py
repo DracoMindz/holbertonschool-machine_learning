@@ -58,3 +58,4 @@ class Transformer(tf.keras.Model):
         dec_output = self.decoder(target, enc_output, training,
                                   look_ahead_mask, decoder_mask)
         output = self.linear(dec_output)
+        return output

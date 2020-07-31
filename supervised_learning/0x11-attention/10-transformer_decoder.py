@@ -13,7 +13,7 @@ class Decoder(tf.keras.layers.Layer):
     class c reates the decoder for a tranformer
     """
     def __init__(self, N, dm, h, hidden, target_vocab,
-                 xmax_seq_len, drop_rate=0.1):
+                 max_seq_len, drop_rate=0.1):
         """
         class constructor
         param:: N: number of blocks in the encoder
