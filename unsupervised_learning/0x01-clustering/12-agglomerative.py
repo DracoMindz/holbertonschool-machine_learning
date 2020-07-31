@@ -20,6 +20,6 @@ def agglomerative(X, dist):
     Z = h.linkage(X, 'ward')
     clust = h.fcluster(Z, t=dist, criterion="distance")
     fig = plt.figure()
-    dn = h.dendrogram(Z, color_threshold=dist, show_contracted=True)
+    dn = h.dendrogram(Z, color_threshold=dist)
     plt.show()
     return clust
