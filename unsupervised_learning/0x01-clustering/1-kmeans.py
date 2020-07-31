@@ -7,6 +7,20 @@ Function performs K-means on a dataset
 import numpy as np
 
 
+def initialize(X, k):
+    """
+    Initialize K clusters, mult variable dist
+    """
+    if type(X) != np.ndarray or len(X.shape) != 2:
+        return None
+    if type(k) != int or k <= 0 or k > X.shape[0]:
+        return None
+    d = X.shape[1]
+    min_X = X.min(axis=0)
+    max_X = X.max(axis=0)
+    return np.random.uniform(min_X, max_X, size=(k, d))
+
+
 def kmeans(X, k, iterations=1000):
     """
     performs K-means on a dataset
@@ -18,61 +32,24 @@ def kmeans(X, k, iterations=1000):
     """
 
     centroids = initialize(X, k)
-    if not isinstance(iterations, int) or iterations < 1:
+
+    if type(iterations) != int or iterations < 1:
         return None, None
     if centroids is None:
         return None, None
-    pt_assign = np.zeros(X.shape[0], dtype=int)
-    while iterations > 0:
-        previous = pt_assign.copy()
-        update_assignedpts(centroids, X, pt_assign)
+    # clustering
+    for m in range(iterations):
+        centCopy = np.copy(centroids)
+        dists = np.sqrt((X - centroids[:, np.newaxis])**2).sum(axis=-1)
+        klass = np.argmin(dists, axis=0)
 
-        #  iterate through the length of the centroids
-        for c_indx in range(len(centroids)):
-            assigned_pts= np.where(pt_assign == c_indx, True, False)
+        for k in range(centroids.shape[0]):
+            if (X[klass == k].size == 0):
+                centroids[k, :] = np.random.uniform(X.min(axis=0),
+                                                    X.max(axis=0), size=(1, d))
+            else:
+                centroids[k, :] = (X[klass == k].mean(axis=0))
+        if (centCopy == centroids).all():
+            return (centroids, klass)
 
-        #  multivariate uniform distribution
-            if assigned_pts.sum() == 0:
-                min_X = X.min(axis=0)
-                max_X = X.max(axis=0)
-                centroids[c_indx] = np.random.uniform(min_X, max_X,
-                                                      (1, X.shape[1]))
-                continue
-            centroids[c_indx] = X[assigned_pts, :].sum(axis=0) / assigned_pts.sum()
-        if (pt_assign == previous).all():
-            break
-        iterations -= 1
-    update_assignedpts(centroids, X, pt_assign)
-    return centroids, pt_assign
-
-
-def update_assignedpts(centroids, X, pt_assign):
-    """
-    update points assignment to centroid
-    """
-    for c_indx, centroid in enumerate(centroids):
-        for p_indx, point in enumerate(X):
-            assigned_point = pt_assign[p_indx]
-            # check if point assigned match centroid index
-            if assigned_point == c_indx:
-                continue
-            # aptcent_diff = (point - centroids[assigned_point])
-            # ptcent_diff = (point - centroid)
-            assigned = pow(point - centroids[assigned_point], 2).sum()
-            verify_pts = pow(point - centroid, 2).sum()
-            if verify_pts < assigned:
-                pt_assign[p_indx] = c_indx
-
-
-def initialize(X, k):
-    """
-    Initialize K clusters, mult variable dist
-    """
-    if type(X) != np.ndarray or len(X.shape) != 2:
-        return None
-    if type(k) != int or k <= 0 or k >= X.shape[0]:
-        return None
-    d = X.shape[1]
-    min_X = X.min(axis=0)
-    max_X = X.max(axis=0)
-    return np.random.uniform(min_X, max_X, size=(k, d))
+    return (centroids, klass)
