@@ -14,11 +14,13 @@ def initialize(X, k):
     :param k: pos integer containing the num clusters
     :return: np.ndarray, of shape (k, d)
     """
-    d = X.shape[1]
+
     if type(X) != np.ndarray or len(X.shape) != 2:
         return None
     if type(k) != int or k <= 0 or k >= X.shape[0]:
         return None
+    n, d = X.shape
+
     min_X = X.min(axis=0)
     max_X = X.max(axis=0)
     return np.random.uniform(min_X, max_X, size=(k, d))
