@@ -2,8 +2,6 @@
 """
 creates and trains a gensim word2vec model
 """
-import numpy as np
-import tensorflow as tf
 import gensim
 
 

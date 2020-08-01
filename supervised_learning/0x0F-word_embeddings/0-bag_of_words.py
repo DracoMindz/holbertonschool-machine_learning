@@ -3,8 +3,7 @@
 Function creates a bag of words embedding matrix
 """
 
-import numpy as np
-import tensorflow as tf
+
 from sklearn.feature_extraction.text import CountVectorizer
 
 

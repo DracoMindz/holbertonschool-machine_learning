@@ -3,8 +3,6 @@
 Function creates a TF-IDF embeddings
 """
 
-import numpy as np
-import tensorflow as tf
 from sklearn.feature_extraction.text import TfidfVectorizer
 
 

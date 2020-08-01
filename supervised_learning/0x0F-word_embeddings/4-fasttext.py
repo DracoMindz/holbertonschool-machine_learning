@@ -3,7 +3,7 @@
 Function creates and trains a gensim fastText model
 """
 
-import numpy as np
+
 from gensim.models import FastText
 
 

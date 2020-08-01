@@ -2,7 +2,6 @@
 """
 function conv a gensim word2vec model to keras Embedding layer
 """
-import numpy as np
 import tensorflow.keras as K
 from gensim.models import Word2Vec
 
