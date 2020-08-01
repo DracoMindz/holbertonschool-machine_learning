@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-function converts a gensim word2vec model to keras Embedding layer
+function conv a gensim word2vec model to keras Embedding layer
 """
 import numpy as np
 import tensorflow.keras as K

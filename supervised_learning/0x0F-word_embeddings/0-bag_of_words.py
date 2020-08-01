@@ -11,7 +11,7 @@ from sklearn.feature_extraction.text import CountVectorizer
 def bag_of_words(sentences, vocab=None):
     """
     creates a bag of words embedding matrix
-    :param sentences: list  of sentences to analyze
+    :param sentences: list  of sents to analyze
     :param vocab: list of words to use for the analysis
     :return: embeddings, features
     Note: embeddings : np.ndarray shape(s,f)

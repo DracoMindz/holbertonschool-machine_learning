@@ -12,7 +12,7 @@ def fasttext_model(sentences, size=100, min_count=5,
                    iterations=5, seed=0, workers=1):
     """
     creataes and trains a gensim fastText model
-    :param sentences: list of sentences to be trained on
+    :param sentences: list of sents to be trained on
     :param size: dim of the embedding layer
     :param min_count: min_count min num of occurences of a word
     for use in training

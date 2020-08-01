@@ -12,7 +12,7 @@ def word2vec_model(sentences, size=100, min_count=5,
                    iterations=5, seed=0):
     """
     creates and trains a gensim word2vec model
-    :param sentences: list of sentences to be trained
+    :param sentences: list of sents to be trained
     :param size: dim of embedding layer
     :param min_count: min num of occurances of a word
             for use in training
