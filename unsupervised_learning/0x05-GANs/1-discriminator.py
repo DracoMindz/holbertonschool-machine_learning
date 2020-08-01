@@ -18,9 +18,9 @@ def discriminator(X):
     :return: Y, a tf.tensor containing classification made by discriminator
     """
     with tf.variable_scope("discriminator", reuse=tf.AUTO_REUSE):
-        layer_1 = tf.layers.dense(inputs=X, units=128, name='layer_1',
-                                  activation='tf.nn.relu')
-        Y = tf.layers.dense(input=layer_1, units=1, name='layer_2',
-                            activation='tf.nn.sigmoid')
+        layer_1 = tf.layers.dense(units=128, name='layer_1',
+                                  activation=tf.nn.relu)(X)
+        Y = tf.layers.dense( units=1, name='layer_2',
+                            activation=tf.nn.sigmoid)(layer_1)
 
         return Y

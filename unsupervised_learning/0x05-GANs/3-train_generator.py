@@ -38,4 +38,4 @@ def train_generator(Z):
     gen_train_op = tf.train.AdamOptimizer().minimize(gen_loss,
                                                      var_list(genr_vars))
 
-    return gen_loss, gen_train_op
+    return (gen_loss, gen_train_op)

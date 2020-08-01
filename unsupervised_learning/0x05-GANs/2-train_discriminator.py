@@ -38,4 +38,4 @@ def train_discriminator(Z, X):
     disc_train_op = tf.train.AdamOptimizer().minimize(disc_loss,
                                                       var_list=dis_vars)
 
-    return disc_loss, disc_train_op
+    return (disc_loss, disc_train_op)
