@@ -19,7 +19,7 @@ def generator(Z):
     :return: X, a tf.tensor containing the generated image
     """
     with tf.variable_scope('generator', reuse=tf.AUTO_REUSE):
-        layer_1 = tf.layers.Dense(units=128, name='layer_1',
+        layer_1 = tf.layers.Dense(input=Z, units=128, name='layer_1',
                                   activation=tf.nn.relu)
         X = tf. layers.Dense(units=784, name='layer_2',
                              activation=tf.nn.sigmoid)(layer_1)
