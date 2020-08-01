@@ -42,7 +42,7 @@ that creates and trains a genism word2vec model.
 **3. Extract Word2Vec**
 
 Write a function def gensim_to_keras(model): that
-gets the converts the gensim word2vec model to a keras layer.
+gets the converts  gensim word2vec model to a keras layer.
 ---
 **4. FastText**
 
