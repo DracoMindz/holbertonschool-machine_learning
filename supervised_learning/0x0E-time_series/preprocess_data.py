@@ -13,13 +13,15 @@ import pandas as pd
 def preprocess_data(TRAIN_SPLIT):
     mpl.rcParams['figure.figsize'] = (8, 6)
     mpl.rcParams['axes.grid'] = False
-    zip.path = tf.keras.utils.get_file(
-        origin="coinbaseUSD_1-min_data_2014-12-01_to_2019-01-09.csv.zip",
-        fname="coinbaseUSD_1-min_data_2014-12-01_to_2019-01-09.csv",
-        extract=True)
+    # zip.path = tf.keras.utils.get_file(
+        # origin="./coinbaseUSD_1-min_data_2014-12-01_to_2019-01-09.csv.zip",
+        # fname="coinbaseUSD_1-min_data_2014-12-01_to_2019-01-09.csv",
+        # extract=True)
+    name = "./coinbaseUSD_1-min_data_2014-12-01_to_2019-01-09.csv"
 
-    csv_path,  _ = os.path.splitext(zip_path)
-    df = pd.read_csv(csv_path)
+    # csv_path,  _ = os.path.splitext(zip_path)
+    # df = pd.read_csv(csv_path)
+    df = pd.read_csv(name)
 
     # set time: reset index and replace with update time
     df.reset_index(inplace=True, drop=True)
