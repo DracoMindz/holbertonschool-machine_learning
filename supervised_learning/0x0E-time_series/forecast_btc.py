@@ -45,22 +45,23 @@ def multivariate_forcast():
     pastHistory = 24
     futureTarget = 0
 
+
 TRAIN_SPLIT = 1300000
 STEP = 1
 
-# dataset = process_data(TRAIN_SPLIT)
+# dataset = multivariate_data(TRAIN_SPLIT)
 dataset = preprocess_data(TRAIN_SPLIT)
 
 x_train_single, y_train_single = multivariate_data(dataset, dataset[:, 2],
-                                                    0, TRAIN_SPLIT,
-                                                    pastHistory,
-                                                    futureTarget, STEP,
-                                                    single_step=True)
+                                                   0, TRAIN_SPLIT,
+                                                   pastHistory,
+                                                   futureTarget, STEP,
+                                                   single_step=True)
 x_val_single, y_val_single = multivariate_data(dataset, dataset[:, 1],
-                                                TRAIN_SPLIT, None,
-                                                pastHistory,
-                                                futureTarget, STEP,
-                                                single_step=True)
+                                               TRAIN_SPLIT, None,
+                                               pastHistory,
+                                               futureTarget, STEP,
+                                               single_step=True)
 print('Single Window of Past History : {}'.format(x_train_single[0].shape))
 
 BUFFER_SIZE = 10000
@@ -104,6 +105,6 @@ plot_trainHistory(single_stepHistory,
 
 for row, col in val_data_single.take(3):
     plot = show_plot([row[0][:, 1].numpy(), col[0].numpy(),
-                        single_step_model.predict(row)[0]], 1,
-                        'Single-Step Prediction')
+                      single_step_model.predict(row)[0]], 1,
+                     'Single-Step Prediction')
 plot.show()
