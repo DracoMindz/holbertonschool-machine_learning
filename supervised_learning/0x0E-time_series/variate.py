@@ -8,7 +8,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 import os
 import pandas as pd
-process_data = ('preprocess_data').preprocess_data
 
 
 def multivariate_data(dataset, target, startIdx, endIdx,
