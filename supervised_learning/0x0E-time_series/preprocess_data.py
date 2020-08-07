@@ -44,14 +44,13 @@ def preprocess_data(data):
 
     # resample data at frequency of an hour
     df_config["Weighted_Price"].resample('H').mean
-    df_config["Volume_(USD)"].resample('H').sum
+    df_config["Volume_(Currency)"].resample('H').sum
     df_config["Volume_(BTC)"].resample('H').sum
     df_config["High"].resample('H').max
     df_config["Low"].resample('H').min
 
     # features: what to consider when forecasting
-    features_considered = ["Open", "Close",
-                           "Volume_(BTC)", "Volume_(USD)",
+    features_considered = ["Volume_(BTC)", "Volume_(Currency)",
                            "Weighted_Price"]
     features = df_config[features_considered]
 
