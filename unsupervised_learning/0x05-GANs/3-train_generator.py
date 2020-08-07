@@ -31,7 +31,7 @@ def train_generator(Z):
     gen_loss = -tf.reduce_mean(tf.log(disc_x_fake))
 
     # variables
-    genr_vars = [var for var im tf.trainable_variables()
+    genr_vars = [var for var in tf.trainable_variables()
                  if var.name.startswith("gen")]
 
     # Optimizer
