@@ -10,17 +10,17 @@ import os
 import pandas as pd
 
 
-def preprocess_data(TRAIN_SPLIT):
+def preprocess_data(data):
     # mpl.rcParams['figure.figsize'] = (8, 6)
     # mpl.rcParams['axes.grid'] = False
-    #zip.path = tf.keras.utils.get_file(
-        #origin="coinbaseUSD_1-min_data_2014-12-01_to_2019-01-09.csv.zip",
-        #fname="coinbaseUSD_1-min_data_2014-12-01_to_2019-01-09.csv",
-        #extract=True)
-    name = "coinbaseUSD_1-min_data_2014-12-01_to_2019-01-09.csv"
+    # zip.path = tf.keras.utils.get_file(
+    #     origin="coinbaseUSD_1-min_data_2014-12-01_to_2019-01-09.csv.zip",
+    #     fname="coinbaseUSD_1-min_data_2014-12-01_to_2019-01-09.csv",
+    #     extract=True)
+    # name = "coinbaseUSD_1-min_data_2014-12-01_to_2019-01-09.csv"
 
     # csv_path,  _ = os.path.splitext(name)
-    dfData = pd.read_csv(name)
+    dfData = pd.read_csv(data)
     df = dfData.dropna()
 
     # set time: reset index and replace with update time
@@ -34,23 +34,25 @@ def preprocess_data(TRAIN_SPLIT):
 
     # set time: What is included in the data.  What is seen.
     # convert data frame index to a dattime index
-    df_config = df_years.set_index(pd.DatetimeIndex(df_years['Timestamp']))
-    df_config.drop('Timestamp', axis=1, inplace=True)  # axis=0 row, axis=1 col
-    df_config.drop('year', axis=1, inplace=True)  # drop & inplace
-    df_config.drop('Open', axis=1, inplace=True)
-    df_config.drop('Close', axis=1, inplace=True)
-    df_config.drop('High', axis=1, inplace=True)
-    df_config.drop('Low', axis=1, inplace=True)
+    df_config = df_years.set_index(pd.DatetimeIndex(df_years["Timestamp"]))
+    df_config.drop("Timestamp", axis=1, inplace=True)  # axis=0 row, axis=1 col
+    df_config.drop("year", axis=1, inplace=True)  # drop & inplace
+    df_config.drop("Open", axis=1, inplace=True)
+    df_config.drop("Close", axis=1, inplace=True)
+    df_config.drop("High", axis=1, inplace=True)
+    df_config.drop("Low", axis=1, inplace=True)
 
     # resample data at frequency of an hour
-    df_config['Weighted_Price'].resample('H').mean
-    df_config['Volume_USD'].resample('H').sum
-    df_config['Volume_BTC'].resample('H').sum
-    df_config['High'].resample('H').max
-    df_config['Low'].resample('H').min
+    df_config["Weighted_Price"].resample('H').mean
+    df_config["Volume_(USD)"].resample('H').sum
+    df_config["Volume_(BTC)"].resample('H').sum
+    df_config["High"].resample('H').max
+    df_config["Low"].resample('H').min
 
     # features: what to consider when forecasting
-    features_considered = ['High', 'Low', 'Volume_BTC', 'Weighted_Price']
+    features_considered = ["Open", "Close",
+                           "Volume_(BTC)", "Volume_(USD)",
+                           "Weighted_Price"]
     features = df_config[features_considered]
 
     # Dataset: standardize using standard deviation and mean
