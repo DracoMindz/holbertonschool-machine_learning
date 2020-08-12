@@ -4,6 +4,7 @@ Function performs Q-learning
 """
 import numpy as np
 import gym
+epsilon_greedy = __import__('2-epsilon_greedy').epsilon_greedy
 
 
 def train(env, Q, episodes=5000, max_steps=100,
@@ -32,3 +33,37 @@ def train(env, Q, episodes=5000, max_steps=100,
     max_exploration_rate = epsilon
     min_exploration_rate = min_epsilon
     exploration_decay_rate = epsilon_decay
+
+    rewards_all_episodes = []
+    for episode in range(num_episodes):
+        state = env.reset()
+
+        done = False
+        rewards_currentEpisode = 0
+
+        # nested loop runs within each timestep
+        for step in range(max_steps_per_episode):
+            # exploration or exploitation, epsilon
+            action = epsilon_greedy(Q, state, exploration_rate)
+
+            newState, reward, done, info = env.step(action)
+            # update Q-table
+            if (done and reward == 0):
+                reward = -1
+
+            explDecayMax = (learning_rate * (reward + discount_rate *
+                                             np.max(Q[newState, :])))
+            Q[state, action] = Q[state, action] * (1 - learning_rate)
+            Q[state, action] = Q[state, action] - explDecayMax
+            state = newState
+            rewards_currentEpisode += reward
+
+            if done is True:
+                break
+        expDiff = (max_exploration_rate - min_exploration_rate)
+        expDecay = np.exp(-exploration_decay_rate*episode)
+        exploration_rate = min_exploration_rate + expDiff * expDecay
+
+        # add current rewards to total rewards list
+        rewards_all_episodes.append(rewards_currentEpisode)
+    return Q, rewards_all_episodes
