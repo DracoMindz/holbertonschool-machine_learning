@@ -41,6 +41,18 @@ Specialization- Machine Learning - Reinforcement Learning
     keras-rl SequentialMemory
     keras-rl EpsGreedyQPolicy
     
+```   
+Chellenges: There were challenges regarding the use of the keras-rl library.
+It was necessary to install the rl2 library as opposed to the rl library. 
+This diminished conflicts.  Error occurred regarding the version of tensorflow
+being used.  Tensorflow 2.2 is the minimum requirement.  I was able to upgrade
+to tensorflow 2.3.  If you have python and python3 installed before running the 
+code you may need to install tensorflow 2.3 (or 2.2 at the minimum) as a "pip 
+install" to and as "pip3 install" to avert conflicts.  
+
+There is a __len__ conflict that occurrs when using Colabs suggesting to use tensorflow 1.14 
+to avoid the conflict presented by keras-rl.
+```
 
    
    

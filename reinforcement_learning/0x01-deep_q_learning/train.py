@@ -3,55 +3,91 @@
 Python script to train agent to play Atari's Breakout
 """
 import gym
-import numpy
-import tensorflow as tf
-import keras
-import keras-rl
-from tensorflow.keras.models import Model
-from tensorflow.keras.layers import Lambda, Input, Layer, Dense
+import numpy as np
+from keras.models import Sequential, Model
+from keras.layers import Dense, Activation, Flatten, Conv2D
+from keras.optimizers import Adam
 
+from rl.agents.dqn import DQNAgent
+from rl.callbacks import ModelIntervalCheckpoint, FileLogger
+from rl.memory import SequentialMemory
+from rl.processors import Processor
 from rl.policy import EpsGreedyQPolicy, GreedyQPolicy
-from rl import SequentialMemory, DQNAgent
-
-rewards_all_episodes = []
+from tensorflow.keras import layers
 
 
-def load_Atari_env(desc=None, map_name=None, is_slippery=False):
-    # Create game environment
-    env = gym.make('Breakout-v0',
-                   dec=desc,
-                   map_name=map_name,
-                   is_slippery=is_slippery)
+# rewards_all_episodes = []
+class AtariProcessor(Processor):
+    # Atari Processor class
 
-    # returns to starting game frame
-    frame = env.reset()
-    env.render()
-    return env
+    def process_Observation(selfself, observation):
+        # observation (height, width, channel)
+        assert observation.ndim == 3
+        img = Image.fromarray(observation)
+
+        # (resize, convert to grayscale)
+        img = img.resize((84, 84), Image.ANTIALIAS).convert('L')
+        processed_observation = np.array(img)
+        assert processed_observation.shape == (84, 84)
+
+        # storred in expereince memory
+        return processed_observation.astype('unit8')
+
+    def process_state_batch(selfself, batch):
+        # Performing process here can use 'unit8' instead of 'float32'
+        processed_batch = batch.astype('float32') / 255
+        return processed_batch
+
+    def process_reward(self, reward):
+        # processing reward
+        return np.clip(reward, -1, 1)
 
 
-def to_grayscale(img):
-    # convert to gray
-    return np.mean(img, axis=2).astype(np.uint8)
+def create_q_model(actionNum, window):
+    # create model define layers
+    # inputs
+    inputs = layers.Input(shape=(window, 84, 84))
+    inputs_p = layers.Permute((2, 3, 1))(inputs)
+
+    # convolutional layers
+    layer1 = Conv2D(32, 8, strides=4, activation="relu")(inputs_p)
+    layer2 = Conv2D(64, 4, strides=2, activation="relu")(layer1)
+    layer3 = Conv2D(64, 3, strides=1, activation="relu")(layer2)
+    layer4 = Flatten()(layer3)
+    layer5 = Dense(512, activation="relu")(layer4)
+    action = Dense(actionNum, activation="linear")(layer5)
+    qModel = Model(inputs=inputs, outputs=action)
+    return qModel
 
 
-def downsample(img):
-    # down sample image
-    return img[::2, ::2]
+# model makes predictions for Q-values use for actions
+modelPred = create_q_model()
 
+# target model predicts future rewards
+modelTarget = create_q_model()
 
-def processing(img):
-    # process image
-    return to_grayscale(downsample(img))
+if __name__ == '__main__':
+    windowLen = 4
+    # get the environment and the nuber of actions
+    env = gym.make("Breakout-v0")
+    env.reset()
+    num_actions = env.action_space.n
+    model = create_q_model(num_actions, windowLen)
+    memory = SequentialMemory(limit=1000000, window_length=windowLen)
+    processor = AtariProcessor()
+    policy = LinearAnnealedPolicy(EpsGreedyQPolicy(), attr='eps', value_max=1,
+                                  value_min=.1, value_test=.05,
+                                  nb_steps=1000000)
 
+    # training the model
+    dqn = DQNAgent(model=model, nb_actions=num_actions,
+                   policy=policy, memory=memory,
+                   processor=processor, nb_steps_warmup=50000,
+                   gamma=.99, target_model_update=10000,
+                   train_interval=4, delta_clip=1)
+    dqn.compile(Adam(lr=.00025), metrics=['mae'])
+    dqn.fit(env, nb_steps=1750000, log_interval=10000,
+            visualize=False, verbose=2)
 
-def train(env, Q, episodes=5000, max_steps=100,
-          alpha=0.1, gamma=0.99, epsilon=1,
-          min_epsilon=0.1, epsilon_decay=0.05):
-    num_episodes = episodes
-    max_steps_per_episode = max_steps
-    learning_rate = alpha
-    discount_rate = gamma
-    exploration_rate = epsilon
-    max_exploration_rate = epsilon
-    min_exploration_rate = min_epsilon
-    exploration_decay_rate = epsilon_decay
+    # saving weights after training done
+    dqn.save_weights('policy.h5', overwrite=True)
