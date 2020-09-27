@@ -13,6 +13,6 @@ def from_numpy(array):
     :param array: np.ndarray from which to create a pd.DataFrame
     :return: pd.DataFrame
     """
-
-    df = pd.DataFrame(array, columns=list('ABCD'))
+    df = pd.DataFrame(array, columns=list('ABCDEFGHIJKLMNOPQRSTUVWXYZ')
+                      [:array.shape[1]])
     return df
