@@ -13,19 +13,20 @@ def availableShips(passengerCount):
     Note: Include pagination
     :return: of no ship an empty list, list of ships
     """
-    urlShips = "https://swapi-api.hbtn.io/api/starships/"
+    url = "https://swapi-api.hbtn.io/api/starships/"
     ships = []  # ships is a list
-    if urlShips is not None:  # if url exists
-        req = requests.get(urlShips)   # get info
-        shipData = req.json()["results"]   # request data ion ships
+    while url is not None:  # if url exists
+        r = requests.get(url)   # get info
+        results = r.json()["results"]   # request data ion ships
 
         # get number of passenger on each ship
-        for ship in shipData:
-            num_p = ship["passengers"]
-            num_p = num_p.replace(",", " ")  # replace the separators
+        for ship in results:
+            p = ship["passengers"]
+            p = p.replace(",", "")  # replace the separators
             # Check number passengers to passenger count needed
-            if num_p.isnumeric() and int(num_p) >= passengerCount:
-                ships.append(ship["name"])  # add ship name to list
-        url = req.json()["next"]
+            if p.isnumeric():
+                if int(p) >= passengerCount:
+                    ships.append(ship["name"])  # add ship name to list
+        url = r.json()["next"]
 
     return ships
