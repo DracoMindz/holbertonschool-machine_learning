@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """
-Mathod that returns the list of ships
+Method that returns the list of ships
 that can hold # passengers
 """
 import requests
@@ -13,20 +13,19 @@ def availableShips(passengerCount):
     Note: Include pagination
     :return: of no ship an empty list, list of ships
     """
-    url = "https://swapi-api.hbtn.io/api/starships/"
-    ships = []  # ships is a list
-    while url is not None:  # if url exists
-        r = requests.get(url)   # get info
-        results = r.json()["results"]   # request data ion ships
+    url = "https://swapi-api.hbtn.io/api/starships"
+    ships = []
+
+    while url is not None:
+        r = requests.get(url)
+        qr = r.json()
+        results = qr['results']
 
         # get number of passenger on each ship
         for ship in results:
-            p = ship["passengers"]
-            p = p.replace(",", "")  # replace the separators
-            # Check number passengers to passenger count needed
-            if p.isnumeric():
-                if int(p) >= passengerCount:
-                    ships.append(ship["name"])  # add ship name to list
-        url = r.json()["next"]
-
+            peps = ship["passengers"]
+            peps = peps.replace(",", "")
+            if peps.isnumeric() and int(peps) >= passengerCount:
+                ships.append(ship["name"])
+        url = qr["next"]
     return ships
