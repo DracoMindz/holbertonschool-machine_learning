@@ -17,7 +17,7 @@ def availableShips(passengerCount):
     ships = []  # ships is a list
     if urlShips is not None:  # if url exists
         req = requests.get(urlShips)   # get info
-        shipData = req.json()["shipData"]   # request data ion ships
+        shipData = req.json()["results"]   # request data ion ships
 
         # get number of passenger on each ship
         for ship in shipData:
