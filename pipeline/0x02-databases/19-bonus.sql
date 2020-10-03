@@ -2,11 +2,11 @@
 -- AddBonus adds a new correction for a student
 -- AddBonus takes three inputs
 -- DUAL is a "dummy" table
-DELIMITER //
+delimiter //
 CREATE PROCEDURE AddBonus(IN user_id INT,
 													IN project_name VARCHAR(255),
 													IN score INT)
-BEGIN
+	BEGIN
 		INSERT INTO project(name)
 		SELECT project_name FROM DUAL
 		WHERE NOT EXISTS (SELECT * FROM projects
@@ -17,5 +17,5 @@ BEGIN
 		VALUES(user_id,
 					 (SELECT id FROM projects WHERE name = project_name),
 					  score);
-END;//
-DELIMITER ;
+	END//
+delimiter ;
